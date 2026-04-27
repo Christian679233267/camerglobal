@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CamerGlobal Admin Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        amazon: { dark: '#131921', light: '#232F3E', lighter: '#37475A', orange: '#FF9900', blue: '#007185', yellow: '#FFD814' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        * { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        html { font-size: clamp(14px, 2.5vw, 16px); }
+        body { background: #f3f4f6; overflow-x: hidden; }
+        
+        .admin-btn-primary {
+            background: linear-gradient(to bottom, #FFD814 0%, #F7CA00 100%);
+            border: 1px solid #FCD200;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(213,169,94,0.25);
+            min-height: 48px;
+            font-weight: 700;
+            color: #131921;
+            transition: all 0.2s;
+        }
+        .admin-btn-primary:active { transform: scale(0.98); }
+        
+        .admin-btn-secondary {
+            background: white;
+            border: 1px solid #D5D9D9;
+            border-radius: 8px;
+            min-height: 48px;
+            font-weight: 600;
+            color: #374151;
+            transition: all 0.2s;
+        }
+        
+        .admin-btn-danger {
+            background: linear-gradient(to bottom, #fee2e2 0%, #fecaca 100%);
+            border: 1px solid #ef4444;
+            border-radius: 8px;
+            color: #dc2626;
+            min-height: 48px;
+            font-weight: 600;
+        }
+        
+        .admin-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            width: 85%;
+            max-width: 280px;
+        }
+        .admin-sidebar.open { transform: translateX(0); }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-2px); }
+        
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 50;
+        }
+        @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } }
+        
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 4px 12px;
+            color: #6b7280;
+            font-size: 11px;
+            min-width: 48px;
+            min-height: 48px;
+            justify-content: center;
+        }
+        .mobile-nav-item.active { color: #FF9900; }
+        
+        .pb-safe { padding-bottom: 80px; }
+        @media (min-width: 1024px) { .pb-safe { padding-bottom: 0; } }
+        
+        .product-table-row {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        @media (min-width: 768px) {
+            .product-table-header { display: grid; }
+            .product-table-row { display: grid; }
+        }
+        
+        .image-upload-zone {
+            border: 2px dashed #D5D9D9;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        .image-upload-zone.dragover {
+            border-color: #FF9900;
+            background: #fffbeb;
+        }
+        
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        @media (min-width: 640px) {
+            .image-preview-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 768px) {
+            .image-preview-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+        .preview-item.primary { border-color: #FF9900; }
+        .preview-item img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .variant-row {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .color-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #e5e7eb;
+            cursor: pointer;
+        }
+        
+        input, select, textarea, button { font-size: 16px; }
+        @media (min-width: 768px) { input, select, textarea, button { font-size: 14px; } }
+        
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 90;
+            display: none;
+            overflow-y: auto;
+        }
+        .modal-overlay.active { display: block; }
+        
+        .modal-content {
+            background: white;
+            min-height: 100vh;
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .modal-content {
+                min-height: auto;
+                max-width: 800px;
+                margin: 40px auto;
+                border-radius: 16px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+        }
+        
+        .section-nav {
+            display: none;
+        }
+        .section-nav.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .order-status-select {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .sync-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 9999;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+        }
+        .sync-indicator.show { display: flex; align-items: center; gap: 6px; }
+        .sync-indicator.online { background: #d1fae5; color: #065f46; }
+        .sync-indicator.syncing { background: #fef3c7; color: #92400e; }
+        .sync-indicator.offline { background: #fee2e2; color: #991b1b; }
+        
+        .toast-container {
+            position: fixed;
+            bottom: 90px;
+            right: 16px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .toast {
+            background: #131921;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="pb-safe">
+    <div id="sync-indicator" class="sync-indicator"><i class="fas fa-circle text-[8px] animate-pulse"></i> <span>Syncing...</span></div>
+    
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="fixed inset-0 bg-amazon-dark z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 md:p-8">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-bold text-amazon-dark">camer<span class="text-amazon-orange">global</span></h1>
+                <p class="text-gray-500 text-sm mt-1">Admin Portal</p>
+            </div>
+            <form onsubmit="adminApp.login(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                    <input type="email" id="admin-email" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange focus:border-transparent outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+                    <input type="password" id="admin-password" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange focus:border-transparent outline-none">
+                </div>
+                <button type="submit" class="admin-btn-primary w-full py-3">Sign In to Admin</button>
+            </form>
+            <div class="mt-4 text-center text-xs text-gray-500">
+                Access restricted to authorized administrators
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN APP -->
+    <div id="admin-app" class="hidden">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 bg-amazon-dark text-white shadow-lg">
+            <div class="h-14 flex items-center px-3 md:px-6 gap-3">
+                <button onclick="adminApp.toggleSidebar()" class="lg:hidden w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="font-bold text-lg tracking-tight">camer<span class="text-amazon-orange">global</span> <span class="text-xs font-normal text-gray-400 ml-1">admin</span></div>
+                <div class="ml-auto flex items-center gap-3">
+                    <button onclick="adminApp.syncNow()" class="hidden md:flex items-center gap-2 px-3 py-2 hover:bg-white/10 rounded text-sm" title="Force Sync">
+                        <i class="fas fa-sync-alt"></i> <span class="hidden sm:inline">Sync</span>
+                    </button>
+                    <button onclick="adminApp.logout()" class="flex items-center gap-2 px-3 py-2 hover:bg-white/10 rounded text-sm">
+                        <i class="fas fa-sign-out-alt"></i> <span class="hidden sm:inline">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex min-h-screen">
+            <!-- Sidebar -->
+            <aside id="admin-sidebar" class="admin-sidebar fixed inset-y-0 left-0 bg-white shadow-2xl z-40 pt-14 lg:pt-0 lg:static lg:transform-none lg:w-64 lg:shadow-none border-r border-gray-200">
+                <div class="p-4 space-y-1 overflow-y-auto h-full pb-20">
+                    <div class="mb-4 px-2">
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Menu</div>
+                    </div>
+                    <button onclick="adminApp.showSection('dashboard')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-left transition-colors active-nav" data-section="dashboard">
+                        <i class="fas fa-chart-line w-5 text-center text-amazon-orange"></i>
+                        <span class="font-medium">Dashboard</span>
+                    </button>
+                    <button onclick="adminApp.showSection('products')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-left transition-colors" data-section="products">
+                        <i class="fas fa-box w-5 text-center text-amazon-blue"></i>
+                        <span class="font-medium">Products</span>
+                        <span id="product-count-badge" class="ml-auto bg-gray-200 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                    </button>
+                    <button onclick="adminApp.showSection('orders')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-left transition-colors" data-section="orders">
+                        <i class="fas fa-shopping-bag w-5 text-center text-green-600"></i>
+                        <span class="font-medium">Orders</span>
+                        <span id="order-count-badge" class="ml-auto bg-gray-200 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                    </button>
+                    <button onclick="adminApp.showSection('banners')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-left transition-colors" data-section="banners">
+                        <i class="fas fa-image w-5 text-center text-purple-500"></i>
+                        <span class="font-medium">Banners</span>
+                    </button>
+                    <button onclick="adminApp.showSection('settings')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-left transition-colors" data-section="settings">
+                        <i class="fas fa-cog w-5 text-center text-gray-500"></i>
+                        <span class="font-medium">Settings</span>
+                    </button>
+                    
+                    <div class="mt-6 px-2">
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Actions</div>
+                        <button onclick="adminApp.exportData()" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-left text-sm text-gray-700">
+                            <i class="fas fa-download w-5 text-center"></i> Export Data
+                        </button>
+                        <button onclick="adminApp.importData()" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-left text-sm text-gray-700">
+                            <i class="fas fa-upload w-5 text-center"></i> Import Data
+                        </button>
+                        <input type="file" id="import-file" class="hidden" accept=".json" onchange="adminApp.handleImport(event)">
+                    </div>
+                </div>
+            </aside>
+            <div id="sidebar-overlay-admin" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden" onclick="adminApp.toggleSidebar()"></div>
+
+            <!-- Main Content -->
+            <main class="flex-1 p-3 md:p-6 max-w-7xl mx-auto w-full">
+                
+                <!-- DASHBOARD -->
+                <div id="section-dashboard" class="section-nav active">
+                    <h1 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Dashboard</h1>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
+                        <div class="stat-card p-4">
+                            <div class="text-xs text-gray-500 font-semibold uppercase mb-1">Total Products</div>
+                            <div class="text-2xl font-bold text-gray-900" id="stat-products">0</div>
+                            <div class="text-xs text-green-600 mt-1"><i class="fas fa-arrow-up"></i> Active catalog</div>
+                        </div>
+                        <div class="stat-card p-4">
+                            <div class="text-xs text-gray-500 font-semibold uppercase mb-1">Total Orders</div>
+                            <div class="text-2xl font-bold text-gray-900" id="stat-orders">0</div>
+                            <div class="text-xs text-blue-600 mt-1"><i class="fas fa-shopping-bag"></i> All time</div>
+                        </div>
+                        <div class="stat-card p-4">
+                            <div class="text-xs text-gray-500 font-semibold uppercase mb-1">Pending</div>
+                            <div class="text-2xl font-bold text-amazon-orange" id="stat-pending">0</div>
+                            <div class="text-xs text-gray-400 mt-1">Needs action</div>
+                        </div>
+                        <div class="stat-card p-4">
+                            <div class="text-xs text-gray-500 font-semibold uppercase mb-1">Revenue</div>
+                            <div class="text-2xl font-bold text-green-600" id="stat-revenue">FCFA 0</div>
+                            <div class="text-xs text-gray-400 mt-1">Total sales</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                        <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
+                            <h3 class="font-bold mb-4">Orders by Status</h3>
+                            <canvas id="ordersChart" height="200"></canvas>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
+                            <h3 class="font-bold mb-4">Top Products</h3>
+                            <div id="top-products-list" class="space-y-3">
+                                <div class="text-center text-gray-400 py-8">No orders yet</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRODUCTS -->
+                <div id="section-products" class="section-nav">
+                    <div class="flex items-center justify-between mb-4 md:mb-6 flex-wrap gap-2">
+                        <h1 class="text-xl md:text-2xl font-bold">Products</h1>
+                        <button onclick="adminApp.openProductModal()" class="admin-btn-primary px-4 py-2 text-sm flex items-center gap-2">
+                            <i class="fas fa-plus"></i> <span class="hidden sm:inline">Add Product</span>
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm mb-4 p-3 md:p-4 flex flex-wrap gap-3 items-center">
+                        <div class="flex-1 min-w-[200px]">
+                            <input type="text" id="product-search" placeholder="Search products..." oninput="adminApp.filterProducts()" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <select id="product-filter-category" onchange="adminApp.filterProducts()" class="border border-gray-300 rounded-lg px-3 py-2 min-h-[44px]">
+                            <option value="all">All Categories</option>
+                            <option value="phones">Phones</option>
+                            <option value="laptops">Laptops</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="electronics">Electronics</option>
+                        </select>
+                        <select id="product-filter-stock" onchange="adminApp.filterProducts()" class="border border-gray-300 rounded-lg px-3 py-2 min-h-[44px]">
+                            <option value="all">All Stock</option>
+                            <option value="in">In Stock</option>
+                            <option value="low">Low Stock</option>
+                            <option value="out">Out of Stock</option>
+                        </select>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <div class="hidden md:grid grid-cols-[60px_1fr_120px_100px_100px_120px] gap-4 p-4 border-b bg-gray-50 text-xs font-bold text-gray-500 uppercase">
+                            <div>Image</div>
+                            <div>Product</div>
+                            <div>Price</div>
+                            <div>Stock</div>
+                            <div>Status</div>
+                            <div class="text-right">Actions</div>
+                        </div>
+                        <div id="products-list" class="p-2 md:p-0">
+                            <div class="text-center py-12 text-gray-400">Loading products...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ORDERS -->
+                <div id="section-orders" class="section-nav">
+                    <h1 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Orders</h1>
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <div class="hidden md:grid grid-cols-[1fr_120px_120px_120px_100px] gap-4 p-4 border-b bg-gray-50 text-xs font-bold text-gray-500 uppercase">
+                            <div>Order Info</div>
+                            <div>Customer</div>
+                            <div>Total</div>
+                            <div>Status</div>
+                            <div class="text-right">Actions</div>
+                        </div>
+                        <div id="orders-list-admin" class="p-2 md:p-0">
+                            <div class="text-center py-12 text-gray-400">Loading orders...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BANNERS -->
+                <div id="section-banners" class="section-nav">
+                    <h1 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Homepage Banners</h1>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6" id="banners-grid">
+                        <!-- Banners injected here -->
+                    </div>
+                    <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800">
+                        <i class="fas fa-info-circle mr-2"></i> Changes to banners are saved automatically to site settings.
+                    </div>
+                </div>
+
+                <!-- SETTINGS -->
+                <div id="section-settings" class="section-nav">
+                    <h1 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Site Settings</h1>
+                    <div class="bg-white rounded-xl shadow-sm p-4 md:p-6 max-w-2xl space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Site Name</label>
+                            <input type="text" id="setting-site-name" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Contact Phone</label>
+                            <input type="text" id="setting-phone" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Contact Email</label>
+                            <input type="email" id="setting-email" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Default City</label>
+                            <select id="setting-city" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                                <option>Douala</option>
+                                <option>Yaoundé</option>
+                                <option>Bamenda</option>
+                                <option>Bafoussam</option>
+                            </select>
+                        </div>
+                        <div class="pt-4 border-t">
+                            <button onclick="adminApp.saveSettings()" class="admin-btn-primary px-6 py-3">Save Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Mobile Bottom Nav -->
+        <nav class="mobile-bottom-nav">
+            <button onclick="adminApp.showSection('dashboard')" class="mobile-nav-item active" data-nav="dashboard">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </button>
+            <button onclick="adminApp.showSection('products')" class="mobile-nav-item" data-nav="products">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </button>
+            <button onclick="adminApp.showSection('orders')" class="mobile-nav-item" data-nav="orders">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Orders</span>
+            </button>
+            <button onclick="adminApp.showSection('settings')" class="mobile-nav-item" data-nav="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- PRODUCT MODAL -->
+    <div id="product-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="sticky top-0 bg-white border-b p-4 flex items-center justify-between z-10 rounded-t-2xl">
+                <h2 class="text-lg md:text-xl font-bold" id="modal-title">Add Product</h2>
+                <button onclick="adminApp.closeProductModal()" class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full text-xl">&times;</button>
+            </div>
+            <div class="p-4 md:p-6 space-y-6 overflow-y-auto">
+                <form id="product-form" onsubmit="adminApp.saveProduct(event)">
+                    <input type="hidden" id="product-id">
+                    
+                    <!-- Basic Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Product Name *</label>
+                            <input type="text" id="p-name" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Category *</label>
+                            <select id="p-category" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                                <option value="phones">Smartphones</option>
+                                <option value="laptops">Laptops</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="electronics">Electronics</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Source</label>
+                            <select id="p-source" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                                <option value="usa">USA (Amazon)</option>
+                                <option value="china">China (Alibaba)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Base Price (FCFA) *</label>
+                            <input type="number" id="p-price" required min="0" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Original Price (FCFA)</label>
+                            <input type="number" id="p-original-price" min="0" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Rating (0-5)</label>
+                            <input type="number" id="p-rating" min="0" max="5" step="0.1" value="4.5" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Reviews Count</label>
+                            <input type="number" id="p-reviews" min="0" value="100" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Stock Quantity *</label>
+                            <input type="number" id="p-stock" required min="0" value="10" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Stock Status</label>
+                            <select id="p-stock-status" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                                <option value="in">In Stock</option>
+                                <option value="low">Low Stock</option>
+                                <option value="out">Out of Stock</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Shipping Days</label>
+                            <input type="text" id="p-shipping" value="12-15 days" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Discount %</label>
+                            <input type="number" id="p-discount" min="0" max="100" value="0" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Description</label>
+                            <textarea id="p-description" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-amazon-orange outline-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Images Upload -->
+                    <div class="pt-4 border-t">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Product Images</label>
+                        <div class="image-upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondrop="adminApp.handleDrop(event)" ondragover="adminApp.handleDragOver(event)" ondragleave="adminApp.handleDragLeave(event)">
+                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-600 font-medium">Tap to upload from device</p>
+                            <p class="text-xs text-gray-400 mt-1">or drag & drop images here</p>
+                            <input type="file" id="file-input" class="hidden" accept="image/*" multiple capture="environment" onchange="adminApp.handleFiles(this.files)">
+                        </div>
+                        <div class="image-preview-grid mt-3" id="image-previews"></div>
+                        <p class="text-xs text-gray-500 mt-2"><i class="fas fa-info-circle"></i> First image is primary. Tap image to set as primary. Max 5 images recommended.</p>
+                    </div>
+
+                    <!-- Variants Builder -->
+                    <div class="pt-4 border-t">
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="block text-sm font-bold text-gray-700">Variants (Colors, Sizes, Measurements)</label>
+                            <select onchange="adminApp.addVariantType(this.value); this.value=''" class="border border-gray-300 rounded-lg px-3 py-2 text-sm min-h-[44px]">
+                                <option value="">+ Add Variant Type</option>
+                                <option value="colors">Colors</option>
+                                <option value="capacities">Capacity / Storage</option>
+                                <option value="sizes">Size</option>
+                                <option value="configurations">Configuration</option>
+                                <option value="ageRanges">Age Range</option>
+                                <option value="bundles">Bundle</option>
+                                <option value="switchTypes">Switch Type</option>
+                                <option value="cameraCounts">Camera Count</option>
+                                <option value="measurements">Measurement</option>
+                                <option value="connectivity">Connectivity</option>
+                            </select>
+                        </div>
+                        <div id="variants-container" class="space-y-3"></div>
+                        <div class="text-center py-4 text-gray-400 text-sm" id="no-variants-msg">No variants added. Use the dropdown above to add colors, sizes, measurements, etc.</div>
+                    </div>
+
+                    <div class="sticky bottom-0 bg-white pt-4 pb-2 md:pb-0 border-t mt-6 flex gap-3">
+                        <button type="submit" class="admin-btn-primary flex-1 py-3">Save Product</button>
+                        <button type="button" onclick="adminApp.closeProductModal()" class="admin-btn-secondary px-6 py-3">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== SUPABASE CONFIG ====================
+        const SUPABASE_URL = 'https://gxxvxlspmwvftbudgtje.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_3xnT_f6ii0uURN0iq8Uybg_fEwUGk6f';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // =========================================================
+
+        const adminApp = {
+            currentUser: null,
+            products: [],
+            orders: [],
+            banners: [],
+            settings: {},
+            tempImages: [],
+            tempVariants: {},
+            editingId: null,
+            charts: {},
+
+            async init() {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session?.user) {
+                    this.currentUser = session.user;
+                    this.checkAdmin();
+                }
+                
+                supabaseClient.auth.onAuthStateChange((event, session) => {
+                    this.currentUser = session?.user || null;
+                    if (this.currentUser) this.checkAdmin();
+                    else this.showLogin();
+                });
+
+                this.loadLocalData();
+            },
+
+            async checkAdmin() {
+                // Allow any authenticated user for demo, or restrict by email:
+                // const allowed = ['admin@camerglobal.shop'];
+                // if (!allowed.includes(this.currentUser.email)) { this.logout(); return; }
+                
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('admin-app').classList.remove('hidden');
+                await this.loadData();
+                this.showSection('dashboard');
+                this.renderDashboard();
+            },
+
+            showLogin() {
+                document.getElementById('login-screen').classList.remove('hidden');
+                document.getElementById('admin-app').classList.add('hidden');
+            },
+
+            async login(e) {
+                e.preventDefault();
+                try {
+                    const { error } = await supabaseClient.auth.signInWithPassword({
+                        email: document.getElementById('admin-email').value,
+                        password: document.getElementById('admin-password').value
+                    });
+                    if (error) throw error;
+                } catch (err) {
+                    this.showToast('Login failed: ' + err.message, 'error');
+                }
+            },
+
+            async logout() {
+                await supabaseClient.auth.signOut();
+                this.showLogin();
+            },
+
+            // ==================== DATA LOADING ====================
+            async loadData() {
+                this.showSync('syncing');
+                
+                // Try Supabase first
+                const { data: sbProducts, error: pErr } = await supabaseClient.from('products').select('*');
+                if (!pErr && sbProducts?.length > 0) {
+                    this.products = sbProducts.map(p => ({...p, variants: p.variants || {}}));
+                } else {
+                    // Fallback to localStorage
+                    const local = localStorage.getItem('camerglobal_products');
+                    if (local) this.products = JSON.parse(local);
+                }
+
+                const { data: sbOrders, error: oErr } = await supabaseClient.from('orders').select('*');
+                if (!oErr && sbOrders) {
+                    this.orders = sbOrders.map(o => ({
+                        ...o,
+                        createdAt: o.created_at ? new Date(o.created_at) : new Date()
+                    }));
+                } else {
+                    const localOrders = localStorage.getItem('camerglobal_orders');
+                    if (localOrders) this.orders = JSON.parse(localOrders);
+                }
+
+                const { data: sbSettings } = await supabaseClient.from('settings').select('*').single();
+                if (sbSettings) this.settings = sbSettings;
+                else {
+                    const localSet = localStorage.getItem('camerglobal_settings');
+                    if (localSet) this.settings = JSON.parse(localSet);
+                }
+
+                this.banners = this.settings?.banners || [
+                    { title: "Shop from China & USA", subtitle: "We buy from Amazon, Alibaba, eBay and ship to Cameroon.", cta: "Order Now", image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800", link: "custom" },
+                    { title: "Electronics Sale", subtitle: "Up to 30% off on iPhones, Laptops & Accessories.", cta: "Shop Now", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800", link: "electronics" },
+                    { title: "12-25 Days Delivery", subtitle: "We handle customs clearance in Douala.", cta: "Learn More", image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800", link: "shipping" }
+                ];
+
+                this.showSync('online');
+                this.renderAll();
+            },
+
+            loadLocalData() {
+                // Load default demo data if nothing exists
+                const existing = localStorage.getItem('camerglobal_products');
+                if (!existing) {
+                    // Seed with sample data so admin isn't empty
+                    const sample = [
+                        { id: 1, name: "iPhone 15 Pro Max", category: "phones", basePrice: 750000, price: 750000, originalPrice: 820000, rating: 4.8, reviews: 2847, source: "usa", sourceName: "Amazon USA", image: "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=400", gallery: ["https://images.unsplash.com/photo-1696446701796-da61225697cc?w=400"], shipping: "12-15 days", badge: "Best Seller", description: "Latest iPhone with Titanium design.", stock: 15, stockStatus: "in", discount: 8, brand: "apple", variants: { colors: [{name:"Natural Titanium",hex:"#C4C4C4"}], capacities: ["256GB","512GB"], capacityPrices: {"256GB":750000,"512GB":920000} } },
+                        { id: 2, name: "MacBook Pro 14", category: "laptops", basePrice: 1100000, price: 1100000, originalPrice: 1250000, rating: 4.9, reviews: 892, source: "usa", sourceName: "Apple Store", image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca4?w=400", gallery: ["https://images.unsplash.com/photo-1517336714731-489689fd1ca4?w=400"], shipping: "15-18 days", badge: "Premium", description: "Apple Silicon M3 chip.", stock: 5, stockStatus: "low", discount: 12, type: "ultrabook", variants: { colors: [{name:"Space Gray",hex:"#4B5563"}], configurations: ["M3 8GB/512GB","M3 Pro 18GB/512GB"], configPrices: {"M3 8GB/512GB":1100000,"M3 Pro 18GB/512GB":1450000} } }
+                    ];
+                    localStorage.setItem('camerglobal_products', JSON.stringify(sample));
+                }
+            },
+
+            async syncNow() {
+                this.showSync('syncing');
+                await this.saveToSupabase();
+                await this.loadData();
+                this.showToast('Sync complete');
+                this.showSync('online');
+                
+                // Broadcast to other tabs
+                localStorage.setItem('camerglobal_sync_trigger', Date.now().toString());
+            },
+
+            async saveToSupabase() {
+                // Upsert all products
+                if (this.products.length > 0) {
+                    const { error } = await supabaseClient.from('products').upsert(this.products.map(p => ({
+                        ...p,
+                        updated_at: new Date().toISOString()
+                    })));
+                    if (error) console.error('Product sync error:', error);
+                }
+                
+                // Save settings
+                const { error: sErr } = await supabaseClient.from('settings').upsert({
+                    id: 1,
+                    site_name: this.settings.site_name || 'CamerGlobal',
+                    phone: this.settings.phone || '',
+                    email: this.settings.email || '',
+                    city: this.settings.city || 'Douala',
+                    banners: this.banners,
+                    updated_at: new Date().toISOString()
+                });
+                if (sErr) console.error('Settings sync error:', sErr);
+            },
+
+            // ==================== NAVIGATION ====================
+            showSection(section) {
+                document.querySelectorAll('.section-nav').forEach(el => el.classList.remove('active'));
+                document.getElementById(`section-${section}`).classList.add('active');
+                
+                document.querySelectorAll('.nav-item').forEach(el => {
+                    el.classList.toggle('active-nav', el.dataset.section === section);
+                    el.classList.toggle('bg-gray-100', el.dataset.section === section);
+                });
+                
+                document.querySelectorAll('.mobile-nav-item').forEach(el => {
+                    el.classList.toggle('active', el.dataset.nav === section);
+                });
+                
+                if (section === 'dashboard') this.renderDashboard();
+                if (section === 'products') this.renderProducts();
+                if (section === 'orders') this.renderOrders();
+                if (section === 'banners') this.renderBanners();
+                if (section === 'settings') this.renderSettings();
+                
+                // Close sidebar on mobile
+                document.getElementById('admin-sidebar').classList.remove('open');
+                document.getElementById('sidebar-overlay-admin').classList.add('hidden');
+                
+                window.scrollTo(0, 0);
+            },
+
+            toggleSidebar() {
+                document.getElementById('admin-sidebar').classList.toggle('open');
+                document.getElementById('sidebar-overlay-admin').classList.toggle('hidden');
+            },
+
+            // ==================== DASHBOARD ====================
+            renderDashboard() {
+                document.getElementById('stat-products').textContent = this.products.length;
+                document.getElementById('stat-orders').textContent = this.orders.length;
+                
+                const pending = this.orders.filter(o => ['pending','pending_payment','pending_review'].includes(o.status)).length;
+                document.getElementById('stat-pending').textContent = pending;
+                
+                const revenue = this.orders.reduce((sum, o) => sum + (o.total || o.subtotal || 0), 0);
+                document.getElementById('stat-revenue').textContent = 'FCFA ' + new Intl.NumberFormat('fr-FR').format(revenue);
+                
+                document.getElementById('product-count-badge').textContent = this.products.length;
+                document.getElementById('order-count-badge').textContent = this.orders.length;
+
+                // Chart
+                const ctx = document.getElementById('ordersChart');
+                if (this.charts.orders) this.charts.orders.destroy();
+                
+                const statusCounts = {};
+                this.orders.forEach(o => {
+                    statusCounts[o.status] = (statusCounts[o.status] || 0) + 1;
+                });
+                
+                this.charts.orders = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(statusCounts).map(s => s.replace('_', ' ')),
+                        datasets: [{
+                            data: Object.values(statusCounts),
+                            backgroundColor: ['#FFD814', '#007185', '#00A8E1', '#007600', '#B12704', '#FEBD69']
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+                });
+
+                // Top products
+                const productSales = {};
+                this.orders.forEach(o => {
+                    (o.items || []).forEach(item => {
+                        productSales[item.name] = (productSales[item.name] || 0) + (item.quantity || 1);
+                    });
+                });
+                const top = Object.entries(productSales).sort((a,b) => b[1] - a[1]).slice(0, 5);
+                const list = document.getElementById('top-products-list');
+                if (top.length === 0) {
+                    list.innerHTML = '<div class="text-center text-gray-400 py-8">No sales data yet</div>';
+                } else {
+                    list.innerHTML = top.map(([name, qty]) => `
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <span class="font-medium text-sm truncate flex-1 mr-2">${name}</span>
+                            <span class="text-sm font-bold text-amazon-orange">${qty} sold</span>
+                        </div>
+                    `).join('');
+                }
+            },
+
+            // ==================== PRODUCTS ====================
+            renderProducts() {
+                const list = document.getElementById('products-list');
+                const filtered = this.getFilteredProducts();
+                
+                if (filtered.length === 0) {
+                    list.innerHTML = '<div class="text-center py-12 text-gray-400">No products found</div>';
+                    return;
+                }
+                
+                list.innerHTML = filtered.map(p => `
+                    <div class="product-table-row p-3 md:p-4 flex flex-col md:grid md:grid-cols-[60px_1fr_120px_100px_100px_120px] gap-3 items-center">
+                        <div class="w-14 h-14 md:w-[60px] md:h-[60px] rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                            <img src="${p.image || p.gallery?.[0] || 'https://via.placeholder.com/60'}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1 min-w-0 w-full">
+                            <div class="font-bold text-sm truncate">${p.name}</div>
+                            <div class="text-xs text-gray-500 capitalize">${p.category} • ${p.source}</div>
+                            ${p.variants && Object.keys(p.variants).length > 0 ? `<div class="text-xs text-amazon-orange mt-0.5">${Object.keys(p.variants).length} variant types</div>` : ''}
+                        </div>
+                        <div class="text-sm font-bold w-full md:w-auto text-left md:text-right">
+                            FCFA ${new Intl.NumberFormat('fr-FR').format(p.price)}
+                        </div>
+                        <div class="w-full md:w-auto">
+                            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-bold ${p.stockStatus === 'out' ? 'bg-red-100 text-red-700' : p.stockStatus === 'low' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'}">
+                                ${p.stock} ${p.stockStatus === 'out' ? 'Out' : p.stockStatus === 'low' ? 'Low' : 'In'}
+                            </span>
+                        </div>
+                        <div class="w-full md:w-auto text-left md:text-center">
+                            ${p.discount > 0 ? `<span class="text-xs font-bold text-red-600">-${p.discount}%</span>` : '<span class="text-xs text-gray-400">-</span>'}
+                        </div>
+                        <div class="flex gap-2 w-full md:w-auto justify-start md:justify-end">
+                            <button onclick="adminApp.editProduct(${p.id})" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-amazon-blue">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="adminApp.deleteProduct(${p.id})" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-red-50 text-red-600">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            getFilteredProducts() {
+                const search = document.getElementById('product-search')?.value.toLowerCase() || '';
+                const cat = document.getElementById('product-filter-category')?.value || 'all';
+                const stock = document.getElementById('product-filter-stock')?.value || 'all';
+                
+                return this.products.filter(p => {
+                    if (search && !p.name.toLowerCase().includes(search)) return false;
+                    if (cat !== 'all' && p.category !== cat) return false;
+                    if (stock !== 'all' && p.stockStatus !== stock) return false;
+                    return true;
+                });
+            },
+
+            filterProducts() {
+                this.renderProducts();
+            },
+
+            openProductModal() {
+                this.editingId = null;
+                this.tempImages = [];
+                this.tempVariants = {};
+                document.getElementById('modal-title').textContent = 'Add Product';
+                document.getElementById('product-form').reset();
+                document.getElementById('product-id').value = '';
+                document.getElementById('image-previews').innerHTML = '';
+                document.getElementById('variants-container').innerHTML = '';
+                document.getElementById('no-variants-msg').classList.remove('hidden');
+                document.getElementById('product-modal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            },
+
+            editProduct(id) {
+                const p = this.products.find(x => x.id === id);
+                if (!p) return;
+                
+                this.editingId = id;
+                this.tempVariants = JSON.parse(JSON.stringify(p.variants || {}));
+                this.tempImages = (p.gallery || [p.image]).map((url, idx) => ({
+                    id: Date.now() + idx,
+                    dataUrl: url,
+                    isExisting: true
+                }));
+                
+                document.getElementById('modal-title').textContent = 'Edit Product';
+                document.getElementById('product-id').value = id;
+                document.getElementById('p-name').value = p.name;
+                document.getElementById('p-category').value = p.category;
+                document.getElementById('p-source').value = p.source;
+                document.getElementById('p-price').value = p.basePrice || p.price;
+                document.getElementById('p-original-price').value = p.originalPrice || '';
+                document.getElementById('p-rating').value = p.rating;
+                document.getElementById('p-reviews').value = p.reviews;
+                document.getElementById('p-stock').value = p.stock;
+                document.getElementById('p-stock-status').value = p.stockStatus;
+                document.getElementById('p-shipping').value = p.shipping;
+                document.getElementById('p-discount').value = p.discount || 0;
+                document.getElementById('p-description').value = p.description || '';
+                
+                this.renderImagePreviews();
+                this.renderVariants();
+                
+                document.getElementById('product-modal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            },
+
+            closeProductModal() {
+                document.getElementById('product-modal').classList.remove('active');
+                document.body.style.overflow = '';
+                this.tempImages = [];
+                this.tempVariants = {};
+            },
+
+            // ==================== IMAGE UPLOAD ====================
+            handleDrop(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                document.getElementById('upload-zone').classList.remove('dragover');
+                this.handleFiles(e.dataTransfer.files);
+            },
+
+            handleDragOver(e) {
+                e.preventDefault();
+                document.getElementById('upload-zone').classList.add('dragover');
+            },
+
+            handleDragLeave(e) {
+                e.preventDefault();
+                document.getElementById('upload-zone').classList.remove('dragover');
+            },
+
+            handleFiles(files) {
+                Array.from(files).forEach(file => {
+                    if (!file.type.startsWith('image/')) return;
+                    if (this.tempImages.length >= 5) {
+                        this.showToast('Max 5 images allowed', 'error');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.tempImages.push({
+                            id: Date.now() + Math.random(),
+                            dataUrl: e.target.result,
+                            file: file,
+                            isExisting: false
+                        });
+                        this.renderImagePreviews();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            },
+
+            renderImagePreviews() {
+                const container = document.getElementById('image-previews');
+                if (this.tempImages.length === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+                container.innerHTML = this.tempImages.map((img, idx) => `
+                    <div class="preview-item ${idx === 0 ? 'primary' : ''}" onclick="adminApp.setPrimaryImage(${img.id})">
+                        <img src="${img.dataUrl}">
+                        <button type="button" onclick="event.stopPropagation(); adminApp.removeImage(${img.id})" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs shadow">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        ${idx === 0 ? '<div class="absolute bottom-0 left-0 right-0 bg-amazon-orange text-white text-[10px] text-center py-0.5 font-bold">PRIMARY</div>' : ''}
+                    </div>
+                `).join('');
+            },
+
+            setPrimaryImage(id) {
+                const idx = this.tempImages.findIndex(i => i.id === id);
+                if (idx > 0) {
+                    const [img] = this.tempImages.splice(idx, 1);
+                    this.tempImages.unshift(img);
+                    this.renderImagePreviews();
+                }
+            },
+
+            removeImage(id) {
+                this.tempImages = this.tempImages.filter(i => i.id !== id);
+                this.renderImagePreviews();
+            },
+
+            // ==================== VARIANTS BUILDER ====================
+            addVariantType(type) {
+                if (!this.tempVariants[type]) {
+                    this.tempVariants[type] = [];
+                }
+                this.renderVariants();
+            },
+
+            renderVariants() {
+                const container = document.getElementById('variants-container');
+                const keys = Object.keys(this.tempVariants);
+                
+                document.getElementById('no-variants-msg').classList.toggle('hidden', keys.length > 0);
+                
+                if (keys.length === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+                
+                container.innerHTML = keys.map(type => `
+                    <div class="variant-row">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-sm capitalize">${this.formatVariantType(type)}</span>
+                            <button type="button" onclick="adminApp.removeVariantType('${type}')" class="text-red-500 text-xs hover:underline">Remove Type</button>
+                        </div>
+                        <div class="space-y-2">
+                            ${this.tempVariants[type].map((item, idx) => this.renderVariantItem(type, idx, item)).join('')}
+                        </div>
+                        <button type="button" onclick="adminApp.addVariantItem('${type}')" class="mt-2 text-sm text-amazon-blue hover:text-amazon-orange font-medium">
+                            <i class="fas fa-plus mr-1"></i> Add ${this.formatVariantType(type).replace(/s$/, '')}
+                        </button>
+                    </div>
+                `).join('');
+            },
+
+            formatVariantType(type) {
+                const map = {
+                    colors: 'Colors', capacities: 'Capacities', sizes: 'Sizes',
+                    configurations: 'Configurations', ageRanges: 'Age Ranges',
+                    bundles: 'Bundles', switchTypes: 'Switch Types',
+                    cameraCounts: 'Camera Counts', measurements: 'Measurements',
+                    connectivity: 'Connectivity', storageOptions: 'Storage Options'
+                };
+                return map[type] || type;
+            },
+
+            renderVariantItem(type, idx, item) {
+                if (type === 'colors') {
+                    return `
+                        <div class="flex items-center gap-2 bg-white p-2 rounded border">
+                            <input type="color" value="${item.hex || '#000000'}" onchange="adminApp.updateVariant('${type}', ${idx}, 'hex', this.value)" class="w-10 h-10 rounded cursor-pointer border-0 p-0">
+                            <input type="text" value="${item.name || ''}" placeholder="Color name" onchange="adminApp.updateVariant('${type}', ${idx}, 'name', this.value)" class="flex-1 border border-gray-200 rounded px-2 py-1 text-sm">
+                            <button type="button" onclick="adminApp.removeVariantItem('${type}', ${idx})" class="text-red-500 w-8 h-8 hover:bg-red-50 rounded"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="flex items-center gap-2 bg-white p-2 rounded border">
+                        <input type="text" value="${item.name || item || ''}" placeholder="Name (e.g. 256GB, Large, etc.)" onchange="adminApp.updateVariant('${type}', ${idx}, 'name', this.value)" class="flex-1 border border-gray-200 rounded px-2 py-1 text-sm">
+                        <input type="number" value="${item.price || 0}" placeholder="Price adj." onchange="adminApp.updateVariant('${type}', ${idx}, 'price', parseInt(this.value)||0)" class="w-24 border border-gray-200 rounded px-2 py-1 text-sm" title="Price adjustment or full price">
+                        <button type="button" onclick="adminApp.removeVariantItem('${type}', ${idx})" class="text-red-500 w-8 h-8 hover:bg-red-50 rounded"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            },
+
+            addVariantItem(type) {
+                if (type === 'colors') {
+                    this.tempVariants[type].push({ name: '', hex: '#000000' });
+                } else {
+                    this.tempVariants[type].push({ name: '', price: 0 });
+                }
+                this.renderVariants();
+            },
+
+            removeVariantItem(type, idx) {
+                this.tempVariants[type].splice(idx, 1);
+                if (this.tempVariants[type].length === 0) delete this.tempVariants[type];
+                this.renderVariants();
+            },
+
+            removeVariantType(type) {
+                delete this.tempVariants[type];
+                this.renderVariants();
+            },
+
+            updateVariant(type, idx, field, value) {
+                if (typeof this.tempVariants[type][idx] === 'string') {
+                    // Convert string to object
+                    const old = this.tempVariants[type][idx];
+                    this.tempVariants[type][idx] = { name: old, price: 0 };
+                }
+                this.tempVariants[type][idx][field] = value;
+            },
+
+            // ==================== SAVE PRODUCT ====================
+            async saveProduct(e) {
+                e.preventDefault();
+                
+                const id = this.editingId || (this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 1);
+                const basePrice = parseInt(document.getElementById('p-price').value) || 0;
+                
+                // Build gallery from tempImages
+                const gallery = this.tempImages.map(img => img.dataUrl);
+                const image = gallery[0] || 'https://via.placeholder.com/400';
+                
+                // Build variant price maps
+                const variants = JSON.parse(JSON.stringify(this.tempVariants));
+                Object.keys(variants).forEach(key => {
+                    if (key === 'colors') {
+                        variants[key] = variants[key].map(c => ({
+                            name: c.name || 'Unnamed',
+                            hex: c.hex || '#000000',
+                            image: c.image || image
+                        }));
+                    } else if (['capacities','configurations','sizes','ageRanges','bundles','switchTypes','cameraCounts','measurements','connectivity','storageOptions'].includes(key)) {
+                        const priceMap = {};
+                        const nameList = [];
+                        variants[key].forEach(item => {
+                            const name = item.name || item;
+                            const price = item.price || basePrice;
+                            nameList.push(name);
+                            priceMap[name] = price;
+                        });
+                        if (key === 'capacities') variants.capacityPrices = priceMap;
+                        if (key === 'configurations') variants.configPrices = priceMap;
+                        if (key === 'sizes') variants.sizePrices = priceMap;
+                        if (key === 'ageRanges') variants.ageRangePrices = priceMap;
+                        if (key === 'bundles') variants.bundlePrices = priceMap;
+                        if (key === 'switchTypes') variants.switchPrices = priceMap;
+                        if (key === 'cameraCounts') variants.cameraCountPrices = priceMap;
+                        if (key === 'measurements') variants.measurementPrices = priceMap;
+                        if (key === 'connectivity') variants.connectivityPrices = priceMap;
+                        if (key === 'storageOptions') variants.storagePrices = priceMap;
+                        variants[key] = nameList;
+                    }
+                });
+                
+                const product = {
+                    id,
+                    name: document.getElementById('p-name').value,
+                    category: document.getElementById('p-category').value,
+                    basePrice,
+                    price: basePrice,
+                    originalPrice: parseInt(document.getElementById('p-original-price').value) || basePrice,
+                    rating: parseFloat(document.getElementById('p-rating').value) || 4.5,
+                    reviews: parseInt(document.getElementById('p-reviews').value) || 0,
+                    source: document.getElementById('p-source').value,
+                    sourceName: document.getElementById('p-source').value === 'usa' ? 'Amazon USA' : 'Alibaba',
+                    image,
+                    gallery,
+                    shipping: document.getElementById('p-shipping').value || '12-15 days',
+                    description: document.getElementById('p-description').value,
+                    stock: parseInt(document.getElementById('p-stock').value) || 0,
+                    stockStatus: document.getElementById('p-stock-status').value,
+                    discount: parseInt(document.getElementById('p-discount').value) || 0,
+                    variants: Object.keys(variants).length > 0 ? variants : undefined
+                };
+                
+                if (this.editingId) {
+                    const idx = this.products.findIndex(p => p.id === this.editingId);
+                    if (idx >= 0) this.products[idx] = product;
+                } else {
+                    this.products.push(product);
+                }
+                
+                // Save locally
+                localStorage.setItem('camerglobal_products', JSON.stringify(this.products));
+                
+                // Try Supabase
+                this.showSync('syncing');
+                const { error } = await supabaseClient.from('products').upsert({
+                    ...product,
+                    updated_at: new Date().toISOString()
+                });
+                if (error) console.error('Save error:', error);
+                
+                // Broadcast update
+                localStorage.setItem('camerglobal_sync_trigger', Date.now().toString());
+                
+                this.showSync('online');
+                this.showToast('Product saved successfully');
+                this.closeProductModal();
+                this.renderProducts();
+                this.renderDashboard();
+            },
+
+            async deleteProduct(id) {
+                if (!confirm('Delete this product?')) return;
+                this.products = this.products.filter(p => p.id !== id);
+                localStorage.setItem('camerglobal_products', JSON.stringify(this.products));
+                
+                await supabaseClient.from('products').delete().eq('id', id);
+                localStorage.setItem('camerglobal_sync_trigger', Date.now().toString());
+                
+                this.showToast('Product deleted');
+                this.renderProducts();
+                this.renderDashboard();
+            },
+
+            // ==================== ORDERS ====================
+            renderOrders() {
+                const list = document.getElementById('orders-list-admin');
+                if (this.orders.length === 0) {
+                    list.innerHTML = '<div class="text-center py-12 text-gray-400">No orders yet</div>';
+                    return;
+                }
+                
+                list.innerHTML = this.orders.map(o => `
+                    <div class="product-table-row p-3 md:p-4 flex flex-col md:grid md:grid-cols-[1fr_120px_120px_120px_100px] gap-3 items-start md:items-center">
+                        <div class="w-full">
+                            <div class="font-bold text-sm">#${o.id?.toString().slice(-8).toUpperCase() || 'N/A'}</div>
+                            <div class="text-xs text-gray-500">${o.createdAt?.toLocaleDateString?.() || new Date(o.created_at).toLocaleDateString()}</div>
+                            <div class="text-xs text-gray-500 mt-1">${o.type === 'custom' ? 'Custom Order' : (o.items?.length || 0) + ' items'}</div>
+                        </div>
+                        <div class="text-sm w-full md:w-auto">
+                            <div class="truncate">${o.customer_name || o.user_email || 'Guest'}</div>
+                            <div class="text-xs text-gray-500">${o.phone || ''}</div>
+                        </div>
+                        <div class="text-sm font-bold w-full md:w-auto">
+                            FCFA ${new Intl.NumberFormat('fr-FR').format(o.total || o.subtotal || 0)}
+                        </div>
+                        <div class="w-full md:w-auto">
+                            <select onchange="adminApp.updateOrderStatus('${o.id}', this.value)" class="order-status-select ${o.status === 'delivered' ? 'bg-green-100 text-green-700' : o.status === 'cancelled' ? 'bg-red-100 text-red-700' : o.status === 'shipped' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}">
+                                <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="pending_payment" ${o.status === 'pending_payment' ? 'selected' : ''}>Pending Payment</option>
+                                <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>Processing</option>
+                                <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2 w-full md:w-auto justify-start md:justify-end">
+                            <button onclick="adminApp.viewOrder('${o.id}')" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-amazon-blue">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            async updateOrderStatus(id, status) {
+                const order = this.orders.find(o => o.id === id);
+                if (order) order.status = status;
+                
+                await supabaseClient.from('orders').update({ status }).eq('id', id);
+                localStorage.setItem('camerglobal_orders', JSON.stringify(this.orders));
+                this.showToast('Order status updated');
+                this.renderOrders();
+                this.renderDashboard();
+            },
+
+            viewOrder(id) {
+                const o = this.orders.find(x => x.id === id);
+                if (!o) return;
+                alert(`Order Details:\n\nCustomer: ${o.customer_name || o.user_email}\nPhone: ${o.phone || 'N/A'}\nCity: ${o.city || 'N/A'}\nTotal: FCFA ${o.total || o.subtotal}\nStatus: ${o.status}\n\nItems:\n${(o.items || []).map(i => `- ${i.name} x${i.quantity}`).join('\n')}\n\n${o.url ? 'Custom URL: ' + o.url : ''}`);
+            },
+
+            // ==================== BANNERS ====================
+            renderBanners() {
+                const grid = document.getElementById('banners-grid');
+                grid.innerHTML = this.banners.map((b, idx) => `
+                    <div class="bg-white rounded-xl shadow-sm p-4 space-y-3">
+                        <div class="aspect-video rounded-lg overflow-hidden bg-gray-100 relative">
+                            <img src="${b.image}" class="w-full h-full object-cover">
+                            <button onclick="adminApp.changeBannerImage(${idx})" class="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                <i class="fas fa-camera mr-2"></i> Change Image
+                            </button>
+                            <input type="file" id="banner-input-${idx}" class="hidden" accept="image/*" onchange="adminApp.handleBannerImage(${idx}, this)">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Title</label>
+                            <input type="text" value="${b.title}" onchange="adminApp.updateBanner(${idx}, 'title', this.value)" class="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Subtitle</label>
+                            <input type="text" value="${b.subtitle}" onchange="adminApp.updateBanner(${idx}, 'subtitle', this.value)" class="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Button Text</label>
+                            <input type="text" value="${b.cta}" onchange="adminApp.updateBanner(${idx}, 'cta', this.value)" class="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase">Link Action</label>
+                            <select onchange="adminApp.updateBanner(${idx}, 'link', this.value)" class="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 text-sm">
+                                <option value="custom" ${b.link === 'custom' ? 'selected' : ''}>Custom Order</option>
+                                <option value="electronics" ${b.link === 'electronics' ? 'selected' : ''}>Electronics</option>
+                                <option value="phones" ${b.link === 'phones' ? 'selected' : ''}>Phones</option>
+                                <option value="shipping" ${b.link === 'shipping' ? 'selected' : ''}>Shipping Info</option>
+                            </select>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            changeBannerImage(idx) {
+                document.getElementById(`banner-input-${idx}`).click();
+            },
+
+            handleBannerImage(idx, input) {
+                const file = input.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.banners[idx].image = e.target.result;
+                    this.saveBanners();
+                    this.renderBanners();
+                };
+                reader.readAsDataURL(file);
+            },
+
+            updateBanner(idx, field, value) {
+                this.banners[idx][field] = value;
+                this.saveBanners();
+            },
+
+            saveBanners() {
+                this.settings.banners = this.banners;
+                localStorage.setItem('camerglobal_settings', JSON.stringify(this.settings));
+                localStorage.setItem('camerglobal_sync_trigger', Date.now().toString());
+                this.showToast('Banners updated');
+            },
+
+            // ==================== SETTINGS ====================
+            renderSettings() {
+                document.getElementById('setting-site-name').value = this.settings.site_name || 'CamerGlobal';
+                document.getElementById('setting-phone').value = this.settings.phone || '+237 6XX XX XX XX';
+                document.getElementById('setting-email').value = this.settings.email || 'support@camerglobal.shop';
+                document.getElementById('setting-city').value = this.settings.city || 'Douala';
+            },
+
+            saveSettings() {
+                this.settings = {
+                    ...this.settings,
+                    site_name: document.getElementById('setting-site-name').value,
+                    phone: document.getElementById('setting-phone').value,
+                    email: document.getElementById('setting-email').value,
+                    city: document.getElementById('setting-city').value,
+                    banners: this.banners
+                };
+                localStorage.setItem('camerglobal_settings', JSON.stringify(this.settings));
+                localStorage.setItem('camerglobal_sync_trigger', Date.now().toString());
+                this.saveToSupabase();
+                this.showToast('Settings saved');
+            },
+
+            // ==================== EXPORT / IMPORT ====================
+            exportData() {
+                const data = {
+                    products: this.products,
+                    orders: this.orders,
+                    settings: this.settings,
+                    exported_at: new Date().toISOString()
+                };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `camerglobal-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                this.showToast('Data exported');
+            },
+
+            importData() {
+                document.getElementById('import-file').click();
+            },
+
+            handleImport(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        if (data.products) {
+                            this.products = data.products;
+                            localStorage.setItem('camerglobal_products', JSON.stringify(this.products));
+                        }
+                        if (data.settings) {
+                            this.settings = data.settings;
+                            localStorage.setItem('camerglobal_settings', JSON.stringify(this.settings));
+                        }
+                        this.showToast('Data imported successfully');
+                        this.loadData();
+                    } catch (err) {
+                        this.showToast('Invalid file format', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            },
+
+            // ==================== UTILS ====================
+            renderAll() {
+                this.renderDashboard();
+                this.renderProducts();
+                this.renderOrders();
+                this.renderBanners();
+                this.renderSettings();
+            },
+
+            showSync(status) {
+                const el = document.getElementById('sync-indicator');
+                el.className = `sync-indicator show ${status}`;
+                el.innerHTML = status === 'syncing' ? '<i class="fas fa-circle text-[8px] animate-pulse"></i> <span>Syncing...</span>' :
+                               status === 'online' ? '<i class="fas fa-check-circle"></i> <span>Synced</span>' :
+                               '<i class="fas fa-exclamation-circle"></i> <span>Offline</span>';
+                if (status === 'online') {
+                    setTimeout(() => el.classList.remove('show'), 2000);
+                }
+            },
+
+            showToast(msg, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type === 'error' ? 'bg-red-600' : ''}`;
+                toast.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'} mr-2"></i> ${msg}`;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => adminApp.init());
+    </script>
+</body>
+</html>
