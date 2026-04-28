@@ -6,7 +6,6 @@
     <title>CamerGlobal - Order from China & USA to Cameroon</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
@@ -70,11 +69,7 @@
         }
         
         body {
-            background-color: #ECFDF5;
-            background-image: radial-gradient(#10B981 0.5px, transparent 0.5px), radial-gradient(#10B981 0.5px, #ECFDF5 0.5px);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-            background-attachment: fixed;
+            background-color: #EAEDED;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
@@ -130,19 +125,17 @@
         
         .product-float {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(15,17,17,0.15);
+            transition: all 0.2s ease;
+            border: 1px solid #D5D9D9;
         }
         .product-float:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border-color: #FF9900;
+            box-shadow: 0 4px 8px rgba(15,17,17,0.2);
         }
         @media (min-width: 768px) {
             .product-float:hover {
-                transform: translateY(-8px);
+                transform: translateY(-2px);
             }
         }
         
@@ -228,8 +221,8 @@
         }
         @media (min-width: 768px) {
             .horizontal-scroll {
-                gap: 20px;
-                padding: 20px;
+                gap: 16px;
+                padding: 16px;
             }
         }
         
@@ -268,7 +261,7 @@
         }
         @media (min-width: 768px) {
             .banners-wrapper {
-                gap: 20px;
+                gap: 16px;
             }
         }
         
@@ -276,16 +269,15 @@
             min-width: 85%;
             flex-shrink: 0;
             background: white;
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: transform 0.2s;
             scroll-snap-align: center;
         }
         .floating-banner:hover {
-            transform: translateY(-5px);
+            transform: translateY(-2px);
         }
         
         @media (min-width: 640px) {
@@ -296,7 +288,7 @@
         
         @media (min-width: 1024px) {
             .floating-banner {
-                min-width: calc(33.333% - 14px);
+                min-width: calc(33.333% - 11px);
             }
         }
         
@@ -422,8 +414,7 @@
         
         .return-page {
             display: none;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
+            background: #EAEDED;
             min-height: 100vh;
         }
         .return-page.active {
@@ -445,26 +436,23 @@
         }
         
         .floating-grid {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.5);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(15,17,17,0.15);
+            border: 1px solid #D5D9D9;
             margin: 12px;
             padding: 12px;
         }
         @media (min-width: 768px) {
             .floating-grid {
-                margin: 20px;
-                padding: 20px;
-                border-radius: 16px;
+                margin: 16px;
+                padding: 16px;
             }
         }
         
         .category-view {
             display: none;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
+            background: #EAEDED;
             min-height: 100vh;
         }
         .category-view.active {
@@ -476,13 +464,13 @@
             color: white;
             padding: 24px 16px;
             margin: -12px -12px 16px -12px;
-            border-radius: 12px 12px 0 0;
+            border-radius: 8px 8px 0 0;
         }
         @media (min-width: 768px) {
             .category-hero {
                 padding: 40px 20px;
-                margin: -20px -20px 20px -20px;
-                border-radius: 16px 16px 0 0;
+                margin: -16px -16px 20px -16px;
+                border-radius: 8px 8px 0 0;
             }
         }
         
@@ -519,20 +507,19 @@
         @media (min-width: 768px) {
             .product-grid-large {
                 grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 20px;
+                gap: 16px;
             }
         }
         
         .product-card-large {
             background: white;
             border-radius: 8px;
-            border: 1px solid #e5e7eb;
-            transition: all 0.3s ease;
+            border: 1px solid #D5D9D9;
+            transition: all 0.2s ease;
             cursor: pointer;
         }
         .product-card-large:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(15,17,17,0.15);
             border-color: #FF9900;
         }
 
@@ -845,7 +832,7 @@
             left: 0;
             right: 0;
             background: white;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid #D5D9D9;
             display: flex;
             justify-content: space-around;
             padding: 8px 0;
@@ -928,6 +915,350 @@
             animation: shimmer 1.5s infinite;
         }
 
+        /* AMAZON CHECKOUT STYLES */
+        .checkout-step {
+            display: none;
+        }
+        .checkout-step.active {
+            display: block;
+        }
+        
+        .checkout-progress {
+            background: white;
+            border-bottom: 1px solid #D5D9D9;
+            padding: 16px;
+        }
+        
+        .checkout-progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .checkout-step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #565959;
+        }
+        
+        .checkout-step-indicator.active {
+            color: #FF9900;
+            font-weight: 700;
+        }
+        
+        .checkout-step-indicator.completed {
+            color: #007600;
+        }
+        
+        .checkout-step-indicator .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #D5D9D9;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .checkout-step-indicator.active .step-number {
+            background: #FF9900;
+        }
+        
+        .checkout-step-indicator.completed .step-number {
+            background: #007600;
+        }
+        
+        .checkout-step-indicator.completed .step-number::after {
+            content: '✓';
+        }
+        
+        .checkout-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        
+        @media (min-width: 768px) {
+            .checkout-container {
+                padding: 24px;
+                display: grid;
+                grid-template-columns: 1fr 350px;
+                gap: 24px;
+            }
+        }
+        
+        .checkout-main {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #D5D9D9;
+            overflow: hidden;
+        }
+        
+        .checkout-section {
+            border-bottom: 1px solid #D5D9D9;
+            padding: 20px;
+        }
+        
+        .checkout-section:last-child {
+            border-bottom: none;
+        }
+        
+        .checkout-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .checkout-section-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #FF9900;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .checkout-section-number.completed {
+            background: #007600;
+        }
+        
+        .checkout-section-number.completed::after {
+            content: '✓';
+        }
+        
+        .checkout-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0F1111;
+        }
+        
+        .checkout-section-title .edit-link {
+            font-size: 14px;
+            color: #007185;
+            font-weight: 400;
+            margin-left: 12px;
+            cursor: pointer;
+        }
+        
+        .checkout-section-title .edit-link:hover {
+            color: #C7511F;
+            text-decoration: underline;
+        }
+        
+        .address-card {
+            border: 2px solid #D5D9D9;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .address-card:hover {
+            border-color: #007185;
+        }
+        
+        .address-card.selected {
+            border-color: #FF9900;
+            background: #FFFBF0;
+        }
+        
+        .address-card.selected::before {
+            content: '✓';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 24px;
+            height: 24px;
+            background: #FF9900;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .payment-method-card {
+            border: 2px solid #D5D9D9;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .payment-method-card:hover {
+            border-color: #007185;
+        }
+        
+        .payment-method-card.selected {
+            border-color: #FF9900;
+            background: #FFFBF0;
+        }
+        
+        .payment-method-card .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D5D9D9;
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .payment-method-card.selected .radio-circle {
+            border-color: #FF9900;
+        }
+        
+        .payment-method-card.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #FF9900;
+            border-radius: 50%;
+        }
+        
+        .checkout-sidebar {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #D5D9D9;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+        
+        .checkout-sidebar-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #B12704;
+            margin-bottom: 16px;
+        }
+        
+        .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .order-summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid #D5D9D9;
+            margin-top: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #B12704;
+        }
+        
+        .place-order-btn {
+            background: linear-gradient(to bottom, #FFD814 0%, #F7CA00 100%);
+            border: 1px solid #FCD200;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            width: 100%;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .place-order-btn:hover {
+            background: linear-gradient(to bottom, #F7CA00 0%, #F0B800 100%);
+        }
+        
+        .place-order-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .checkout-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #D5D9D9;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .checkout-input:focus {
+            outline: none;
+            border-color: #007185;
+            box-shadow: 0 0 0 3px rgba(0,113,133,0.1);
+        }
+        
+        .checkout-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #0F1111;
+        }
+        
+        .checkout-form-row {
+            margin-bottom: 16px;
+        }
+        
+        .checkout-form-row.half {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        @media (min-width: 768px) {
+            .checkout-form-row.half {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .checkout-divider {
+            text-align: center;
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .checkout-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #D5D9D9;
+        }
+        
+        .checkout-divider span {
+            background: white;
+            padding: 0 12px;
+            position: relative;
+            font-size: 12px;
+            color: #565959;
+        }
+        
         .supabase-status {
             position: fixed;
             top: 0;
@@ -943,30 +1274,75 @@
         .supabase-status.online {
             display: block;
             background: #007600;
-            color: rgb(190, 241, 243);
+            color: white;
         }
         .supabase-status.offline {
             display: block;
-            background: #b17404;
+            background: #B12704;
             color: white;
+        }
+        
+        .order-confirmation {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .order-confirmation-icon {
+            width: 80px;
+            height: 80px;
+            background: #007600;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            font-size: 40px;
+        }
+        
+        .order-confirmation h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0F1111;
+            margin-bottom: 12px;
+        }
+        
+        .order-confirmation p {
+            color: #565959;
+            margin-bottom: 8px;
+        }
+        
+        .order-confirmation .order-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #007185;
+            margin: 16px 0;
+        }
+        
+        .estimated-delivery {
+            background: #F0F2F2;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .estimated-delivery h4 {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .estimated-delivery-date {
+            color: #007600;
+            font-weight: 700;
         }
     </style>
 </head>
 <body class="min-h-screen pb-safe">
-    <!-- Supabase Config -->
-    <script>
-        // ==================== SUPABASE CONFIGURATION ====================
-        // Replace these with your actual Supabase project credentials
-        const SUPABASE_URL = 'https://gxxvxlspmwvftbudgtje.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_3xnT_f6ii0uURN0iq8Uybg_fEwUGk6f';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        // ================================================================
-    </script>
-
     <div id="supabase-status" class="supabase-status">Syncing...</div>
 
-    <!-- HEADER - MOBILE FIRST -->
-    <header class="sticky top-0 z-50 shadow-lg">
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 shadow-lg" id="main-header">
         <div class="bg-amazon-dark text-white h-[56px] md:h-[60px] flex items-center px-2 md:px-4 gap-1 md:gap-2">
             <button onclick="app.toggleSidebar()" class="md:hidden flex items-center justify-center w-12 h-12 hover:bg-white/10 rounded">
                 <i class="fas fa-bars text-lg"></i>
@@ -1092,6 +1468,42 @@
         </div>
     </header>
 
+    <!-- CHECKOUT HEADER (shown during checkout) -->
+    <header id="checkout-header" class="bg-amazon-dark text-white hidden">
+        <div class="max-w-[1200px] mx-auto px-4 h-[60px] flex items-center justify-between">
+            <a href="#" onclick="app.goHome(); return false;" class="logo-smile">
+                <span class="text-xl font-bold">camer<span class="text-amazon-orange">global</span></span>
+            </a>
+            <div class="text-lg font-bold">Checkout</div>
+            <div class="w-[100px]"></div>
+        </div>
+    </header>
+
+    <!-- CHECKOUT PROGRESS -->
+    <div id="checkout-progress" class="checkout-progress hidden">
+        <div class="checkout-progress-bar">
+            <div class="checkout-step-indicator active" id="progress-signin">
+                <span class="step-number">1</span>
+                <span class="hidden sm:inline">Sign in</span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
+            <div class="checkout-step-indicator" id="progress-shipping">
+                <span class="step-number">2</span>
+                <span class="hidden sm:inline">Shipping</span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
+            <div class="checkout-step-indicator" id="progress-payment">
+                <span class="step-number">3</span>
+                <span class="hidden sm:inline">Payment</span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
+            <div class="checkout-step-indicator" id="progress-review">
+                <span class="step-number">4</span>
+                <span class="hidden sm:inline">Review</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Sidebar Menu -->
     <div id="sidebar" class="fixed inset-y-0 left-0 bg-white z-[60] sidebar overflow-y-auto shadow-2xl">
         <div class="bg-amazon-light text-white p-4 flex items-center gap-3">
@@ -1134,8 +1546,9 @@
     <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-80 z-[55] hidden" onclick="app.toggleSidebar()"></div>
 
     <!-- MAIN CONTENT -->
-    <main class="max-w-[1500px] mx-auto min-h-screen pb-8">
+    <main class="max-w-[1500px] mx-auto min-h-screen pb-8" id="main-content">
         
+        <!-- HOME VIEW -->
         <div id="home-view">
             <div class="floating-grid p-0 overflow-hidden">
                 <div class="relative py-4">
@@ -1794,9 +2207,277 @@
                 <div id="order-detail-content" class="p-4 md:p-6"></div>
             </div>
         </div>
+
+        <!-- AMAZON-STYLE CHECKOUT -->
+        <div id="checkout-view" class="hidden">
+            <div class="checkout-container">
+                <div class="checkout-main">
+                    <!-- Step 1: Sign In (if not signed in) -->
+                    <div id="checkout-step-signin" class="checkout-step active">
+                        <div class="checkout-section">
+                            <div class="checkout-section-header">
+                                <div class="checkout-section-number">1</div>
+                                <div class="checkout-section-title">Sign in</div>
+                            </div>
+                            <div id="checkout-signin-content">
+                                <div class="p-4 bg-gray-50 rounded">
+                                    <p class="mb-4">Please sign in to continue with your order.</p>
+                                    <button onclick="app.showLoginModal()" class="amazon-btn-primary px-8 py-3 rounded font-bold">Sign In</button>
+                                    <div class="mt-4 text-sm">
+                                        New customer? <a onclick="app.showRegisterModal()" class="a-link">Create account</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Shipping Address -->
+                    <div id="checkout-step-shipping" class="checkout-step">
+                        <div class="checkout-section">
+                            <div class="checkout-section-header">
+                                <div class="checkout-section-number" id="shipping-number">2</div>
+                                <div class="checkout-section-title">
+                                    Choose a shipping address
+                                    <span class="edit-link hidden" onclick="app.goToCheckoutStep('shipping')">Change</span>
+                                </div>
+                            </div>
+                            <div id="checkout-shipping-content">
+                                <div class="space-y-3" id="saved-addresses">
+                                    <!-- Addresses rendered here -->
+                                </div>
+                                <div class="checkout-divider"><span>or</span></div>
+                                <button onclick="app.showAddAddressForm()" class="amazon-btn-secondary w-full py-3 rounded font-bold">
+                                    <i class="fas fa-plus mr-2"></i>Add a new address
+                                </button>
+                                <div id="add-address-form" class="hidden mt-4 p-4 bg-gray-50 rounded">
+                                    <h4 class="font-bold mb-4">Enter a new shipping address</h4>
+                                    <form onsubmit="app.saveNewAddress(event)">
+                                        <div class="checkout-form-row">
+                                            <label class="checkout-label">Full Name</label>
+                                            <input type="text" name="fullName" required class="checkout-input">
+                                        </div>
+                                        <div class="checkout-form-row">
+                                            <label class="checkout-label">Address</label>
+                                            <input type="text" name="address" required class="checkout-input" placeholder="Street address, P.O. box, company name">
+                                        </div>
+                                        <div class="checkout-form-row">
+                                            <label class="checkout-label">Apartment, suite, etc. (optional)</label>
+                                            <input type="text" name="apartment" class="checkout-input">
+                                        </div>
+                                        <div class="checkout-form-row half">
+                                            <div>
+                                                <label class="checkout-label">City</label>
+                                                <input type="text" name="city" required class="checkout-input">
+                                            </div>
+                                            <div>
+                                                <label class="checkout-label">Region</label>
+                                                <select name="region" required class="checkout-input">
+                                                    <option value="">Select</option>
+                                                    <option value="Littoral">Littoral</option>
+                                                    <option value="Centre">Centre</option>
+                                                    <option value="North West">North West</option>
+                                                    <option value="West">West</option>
+                                                    <option value="North">North</option>
+                                                    <option value="Far North">Far North</option>
+                                                    <option value="South">South</option>
+                                                    <option value="East">East</option>
+                                                    <option value="Adamawa">Adamawa</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="checkout-form-row half">
+                                            <div>
+                                                <label class="checkout-label">Phone Number</label>
+                                                <input type="tel" name="phone" required class="checkout-input" placeholder="+237 6XX XX XX XX">
+                                            </div>
+                                            <div>
+                                                <label class="checkout-label">Delivery Instructions (optional)</label>
+                                                <input type="text" name="instructions" class="checkout-input" placeholder="Leave at door, call before delivery...">
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-3 mt-4">
+                                            <button type="submit" class="amazon-btn-primary flex-1 py-3 rounded font-bold">Use this address</button>
+                                            <button type="button" onclick="app.hideAddAddressForm()" class="amazon-btn-secondary px-6 py-3 rounded">Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Payment Method -->
+                    <div id="checkout-step-payment" class="checkout-step">
+                        <div class="checkout-section">
+                            <div class="checkout-section-header">
+                                <div class="checkout-section-number" id="payment-number">3</div>
+                                <div class="checkout-section-title">
+                                    Choose a payment method
+                                    <span class="edit-link hidden" onclick="app.goToCheckoutStep('payment')">Change</span>
+                                </div>
+                            </div>
+                            <div id="checkout-payment-content">
+                                <div class="space-y-3">
+                                    <div class="payment-method-card" onclick="app.selectPaymentMethod('orange')" id="payment-orange">
+                                        <div class="radio-circle"></div>
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 bg-orange-500 rounded flex items-center justify-center text-white">
+                                                <i class="fas fa-mobile-alt"></i>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">Orange Money</div>
+                                                <div class="text-sm text-gray-500">Pay with Orange Money mobile wallet</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="payment-method-card" onclick="app.selectPaymentMethod('mtn')" id="payment-mtn">
+                                        <div class="radio-circle"></div>
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 bg-yellow-500 rounded flex items-center justify-center text-white">
+                                                <i class="fas fa-mobile-alt"></i>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">MTN Mobile Money</div>
+                                                <div class="text-sm text-gray-500">Pay with MTN MoMo mobile wallet</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="payment-method-card" onclick="app.selectPaymentMethod('bank')" id="payment-bank">
+                                        <div class="radio-circle"></div>
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 bg-blue-600 rounded flex items-center justify-center text-white">
+                                                <i class="fas fa-university"></i>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">Bank Transfer</div>
+                                                <div class="text-sm text-gray-500">Pay via bank transfer or deposit</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="payment-method-card" onclick="app.selectPaymentMethod('cash')" id="payment-cash">
+                                        <div class="radio-circle"></div>
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 bg-green-600 rounded flex items-center justify-center text-white">
+                                                <i class="fas fa-money-bill-wave"></i>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">Cash on Delivery</div>
+                                                <div class="text-sm text-gray-500">Pay when you receive your order</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-4 bg-blue-50 rounded">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fas fa-shield-alt text-amazon-blue mt-1"></i>
+                                        <div class="text-sm">
+                                            <div class="font-bold">Secure Payment</div>
+                                            <div class="text-gray-600">Your payment information is encrypted and secure.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Review Items and Shipping -->
+                    <div id="checkout-step-review" class="checkout-step">
+                        <div class="checkout-section">
+                            <div class="checkout-section-header">
+                                <div class="checkout-section-number" id="review-number">4</div>
+                                <div class="checkout-section-title">
+                                    Review items and shipping
+                                    <span class="edit-link hidden" onclick="app.goToCheckoutStep('review')">Change</span>
+                                </div>
+                            </div>
+                            <div id="checkout-review-content">
+                                <div id="review-items-list" class="space-y-4 mb-6"></div>
+                                <div class="border-t pt-4">
+                                    <h4 class="font-bold mb-3">Shipping Speed</h4>
+                                    <div class="space-y-3">
+                                        <label class="flex items-start gap-3 p-3 border rounded cursor-pointer hover:border-amazon-orange transition-colors">
+                                            <input type="radio" name="shipping-speed" value="standard" checked class="mt-1" onchange="app.updateShippingCost(0)">
+                                            <div>
+                                                <div class="font-bold">Standard Shipping</div>
+                                                <div class="text-sm text-gray-500">12-25 business days</div>
+                                                <div class="text-sm text-green-600 font-medium">FREE</div>
+                                            </div>
+                                        </label>
+                                        <label class="flex items-start gap-3 p-3 border rounded cursor-pointer hover:border-amazon-orange transition-colors">
+                                            <input type="radio" name="shipping-speed" value="express" class="mt-1" onchange="app.updateShippingCost(50000)">
+                                            <div>
+                                                <div class="font-bold">Express Shipping</div>
+                                                <div class="text-sm text-gray-500">7-14 business days</div>
+                                                <div class="text-sm text-gray-700 font-medium">+ FCFA 50,000</div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Order Confirmation -->
+                    <div id="checkout-step-confirmation" class="checkout-step">
+                        <div class="checkout-section">
+                            <div class="order-confirmation">
+                                <div class="order-confirmation-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <h2>Order placed, thank you!</h2>
+                                <p>Confirmation will be sent to your email.</p>
+                                <div class="order-number" id="confirmation-order-number">Order #CG-12345678</div>
+                                <p>Shipping to <span id="confirmation-address" class="font-medium"></span></p>
+                                <div class="estimated-delivery">
+                                    <h4><i class="fas fa-truck mr-2"></i>Estimated delivery</h4>
+                                    <div class="estimated-delivery-date" id="confirmation-delivery-date"></div>
+                                    <div class="text-sm text-gray-500 mt-1">We will send tracking information once your order ships.</div>
+                                </div>
+                                <div class="flex gap-3 justify-center mt-6">
+                                    <button onclick="app.goHome()" class="amazon-btn-primary px-8 py-3 rounded font-bold">Continue Shopping</button>
+                                    <button onclick="app.showOrderManagement()" class="amazon-btn-secondary px-8 py-3 rounded font-bold">View Your Orders</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checkout Sidebar (Order Summary) -->
+                <div class="checkout-sidebar" id="checkout-sidebar">
+                    <div class="checkout-sidebar-title">Order Summary</div>
+                    <div id="order-summary-content">
+                        <div class="order-summary-item">
+                            <span>Items (<span id="summary-item-count">0</span>):</span>
+                            <span id="summary-items-total">FCFA 0</span>
+                        </div>
+                        <div class="order-summary-item">
+                            <span>Shipping & handling:</span>
+                            <span id="summary-shipping">FCFA 0</span>
+                        </div>
+                        <div class="order-summary-item">
+                            <span>Import Fees Deposit:</span>
+                            <span id="summary-import">FCFA 0</span>
+                        </div>
+                        <div class="order-summary-item text-green-600">
+                            <span>Discount:</span>
+                            <span id="summary-discount">-FCFA 0</span>
+                        </div>
+                        <div class="order-summary-total">
+                            <span>Order Total:</span>
+                            <span id="summary-total">FCFA 0</span>
+                        </div>
+                    </div>
+                    <button onclick="app.placeOrder()" id="place-order-btn" class="place-order-btn" disabled>
+                        Place your order
+                    </button>
+                    <div class="text-xs text-gray-500 mt-3 text-center">
+                        By placing your order, you agree to CamerGlobal's <a class="a-link">privacy notice</a> and <a class="a-link">conditions of use</a>.
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <footer class="bg-amazon-lighter text-white mt-8 border-t-4 border-amazon-orange pb-20 md:pb-0">
+    <footer class="bg-amazon-lighter text-white mt-8 border-t-4 border-amazon-orange pb-20 md:pb-0" id="main-footer">
         <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="w-full bg-amazon-light hover:bg-gray-600 py-4 text-sm text-center transition-colors border-b border-gray-600">
             Back to top
         </button>
@@ -1849,7 +2530,7 @@
         </div>
     </footer>
 
-    <nav class="mobile-bottom-nav">
+    <nav class="mobile-bottom-nav" id="mobile-nav">
         <a href="#" onclick="app.goHome(); return false;" class="mobile-nav-item active">
             <i class="fas fa-home"></i>
             <span>Home</span>
@@ -1889,7 +2570,7 @@
                     <span>Subtotal (<span id="cart-item-count">0</span> items):</span>
                     <span class="font-bold" id="cart-subtotal">FCFA 0</span>
                 </div>
-                <button onclick="app.checkout()" class="amazon-btn-primary w-full py-3 rounded text-sm font-bold mb-2">
+                <button onclick="app.proceedToCheckout()" class="amazon-btn-primary w-full py-3 rounded text-sm font-bold mb-2">
                     Proceed to checkout
                 </button>
                 <button onclick="app.hideCart()" class="amazon-btn-secondary w-full py-3 rounded text-sm">
@@ -2230,6 +2911,14 @@
             selectedVariants: {},
             orders: [],
             currentOrderFilter: 'all',
+            
+            // Checkout state
+            checkoutStep: 'signin',
+            savedAddresses: [],
+            selectedAddress: null,
+            selectedPaymentMethod: null,
+            shippingCost: 0,
+            checkoutCart: [],
 
             async init() {
                 this.renderHorizontalProducts();
@@ -2244,6 +2933,18 @@
                 const savedCity = localStorage.getItem('camerglobal_city');
                 if (savedCity) document.getElementById('location-text').textContent = savedCity;
                 this.updateMobileNav();
+                this.loadSavedAddresses();
+            },
+
+            loadSavedAddresses() {
+                const saved = localStorage.getItem('camerglobal_addresses');
+                if (saved) {
+                    this.savedAddresses = JSON.parse(saved);
+                }
+            },
+
+            saveAddresses() {
+                localStorage.setItem('camerglobal_addresses', JSON.stringify(this.savedAddresses));
             },
 
             setupLiveSearch() {
@@ -2457,7 +3158,7 @@
             scrollBanners(direction) {
                 const wrapper = document.getElementById('banners-wrapper');
                 const banners = wrapper.children;
-                const bannerWidth = banners[0].offsetWidth + (window.innerWidth >= 768 ? 20 : 12);
+                const bannerWidth = banners[0].offsetWidth + (window.innerWidth >= 768 ? 16 : 12);
                 if (direction === 'right') {
                     this.currentBannerIndex = (this.currentBannerIndex + 1) % banners.length;
                 } else {
@@ -2949,7 +3650,7 @@
 
             buyNow() {
                 this.addVariantToCart();
-                this.showCart();
+                this.proceedToCheckout();
             },
 
             closeProductDetail() {
@@ -2996,6 +3697,7 @@
                 document.querySelectorAll('.category-view').forEach(el => el.classList.remove('active'));
                 document.getElementById('category-return-page').classList.remove('active');
                 document.getElementById('order-management-view').classList.remove('active');
+                document.getElementById('checkout-view').classList.add('hidden');
                 const viewId = category === 'phones' ? 'phones-view' : 
                               category === 'laptops' ? 'laptops-view' : 
                               category === 'accessories' ? 'accessories-view' : 
@@ -3112,6 +3814,7 @@
                 document.querySelectorAll('.category-view').forEach(el => el.classList.remove('active'));
                 document.getElementById('category-return-page').classList.add('active');
                 document.getElementById('order-management-view').classList.remove('active');
+                document.getElementById('checkout-view').classList.add('hidden');
                 document.getElementById('return-page-title').textContent = title;
                 let filtered = preFiltered || products;
                 if (filterType === 'category') {
@@ -3195,6 +3898,12 @@
                 document.querySelectorAll('.category-view').forEach(el => el.classList.remove('active'));
                 document.getElementById('category-return-page').classList.remove('active');
                 document.getElementById('order-management-view').classList.remove('active');
+                document.getElementById('checkout-view').classList.add('hidden');
+                document.getElementById('main-header').classList.remove('hidden');
+                document.getElementById('checkout-header').classList.add('hidden');
+                document.getElementById('checkout-progress').classList.add('hidden');
+                document.getElementById('main-footer').classList.remove('hidden');
+                document.getElementById('mobile-nav').classList.remove('hidden');
                 document.getElementById('search-input-desktop').value = '';
                 document.getElementById('search-input-mobile').value = '';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3209,6 +3918,7 @@
                 document.querySelectorAll('.category-view').forEach(el => el.classList.remove('active'));
                 document.getElementById('category-return-page').classList.remove('active');
                 document.getElementById('order-management-view').classList.add('active');
+                document.getElementById('checkout-view').classList.add('hidden');
                 this.renderOrders();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             },
@@ -3617,36 +4327,270 @@
                 subtotalEl.textContent = this.formatPrice(subtotal);
             },
 
-            async checkout() {
-                if (!this.currentUser) {
-                    this.hideCart();
-                    this.showLoginModal();
+            // ==================== AMAZON-STYLE CHECKOUT ====================
+            
+            proceedToCheckout() {
+                if (this.cart.length === 0) {
+                    this.showToast('Your cart is empty');
                     return;
                 }
-                if (this.cart.length === 0) return;
-                for (let item of this.cart) {
-                    const product = products.find(p => p.id === item.id);
-                    if (product && item.quantity > product.stock) {
-                        this.showToast(`Sorry, only ${product.stock} units of ${product.name} available`);
-                        return;
-                    }
+                if (!this.currentUser) {
+                    this.hideCart();
+                    this.startCheckout('signin');
+                    return;
                 }
+                this.startCheckout('shipping');
+            },
+
+            startCheckout(step) {
+                // Hide main content, show checkout
+                document.getElementById('home-view').style.display = 'none';
+                document.querySelectorAll('.category-view').forEach(el => el.classList.remove('active'));
+                document.getElementById('category-return-page').classList.remove('active');
+                document.getElementById('order-management-view').classList.remove('active');
+                document.getElementById('checkout-view').classList.remove('hidden');
+                
+                // Switch to checkout header
+                document.getElementById('main-header').classList.add('hidden');
+                document.getElementById('checkout-header').classList.remove('hidden');
+                document.getElementById('checkout-progress').classList.remove('hidden');
+                document.getElementById('main-footer').classList.add('hidden');
+                document.getElementById('mobile-nav').classList.add('hidden');
+                
+                this.checkoutStep = step;
+                this.checkoutCart = [...this.cart];
+                this.updateCheckoutProgress();
+                this.showCheckoutStep(step);
+                this.updateOrderSummary();
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            updateCheckoutProgress() {
+                const steps = ['signin', 'shipping', 'payment', 'review'];
+                const currentIdx = steps.indexOf(this.checkoutStep);
+                
+                steps.forEach((step, idx) => {
+                    const indicator = document.getElementById(`progress-${step}`);
+                    if (!indicator) return;
+                    
+                    indicator.classList.remove('active', 'completed');
+                    if (idx < currentIdx) {
+                        indicator.classList.add('completed');
+                        indicator.querySelector('.step-number').textContent = '';
+                    } else if (idx === currentIdx) {
+                        indicator.classList.add('active');
+                        indicator.querySelector('.step-number').textContent = idx + 1;
+                    } else {
+                        indicator.querySelector('.step-number').textContent = idx + 1;
+                    }
+                });
+            },
+
+            showCheckoutStep(step) {
+                document.querySelectorAll('.checkout-step').forEach(el => el.classList.remove('active'));
+                document.getElementById(`checkout-step-${step}`).classList.add('active');
+                
+                // Update section numbers
+                const steps = ['signin', 'shipping', 'payment', 'review'];
+                const currentIdx = steps.indexOf(step);
+                
+                steps.forEach((s, idx) => {
+                    const numEl = document.getElementById(`${s}-number`);
+                    if (numEl) {
+                        numEl.classList.remove('completed');
+                        if (idx < currentIdx) {
+                            numEl.classList.add('completed');
+                            numEl.textContent = '';
+                        } else {
+                            numEl.textContent = idx + 1;
+                        }
+                    }
+                    // Show/hide edit links
+                    const titleEl = document.querySelector(`#checkout-step-${s} .checkout-section-title`);
+                    if (titleEl) {
+                        const editLink = titleEl.querySelector('.edit-link');
+                        if (editLink) {
+                            editLink.classList.toggle('hidden', idx >= currentIdx);
+                        }
+                    }
+                });
+                
+                if (step === 'shipping') {
+                    this.renderSavedAddresses();
+                } else if (step === 'review') {
+                    this.renderReviewItems();
+                }
+                
+                this.updatePlaceOrderButton();
+            },
+
+            goToCheckoutStep(step) {
+                this.checkoutStep = step;
+                this.updateCheckoutProgress();
+                this.showCheckoutStep(step);
+            },
+
+            renderSavedAddresses() {
+                const container = document.getElementById('saved-addresses');
+                if (this.savedAddresses.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-sm">No saved addresses. Please add a new address.</p>';
+                    return;
+                }
+                container.innerHTML = this.savedAddresses.map((addr, idx) => `
+                    <div class="address-card ${this.selectedAddress === idx ? 'selected' : ''}" onclick="app.selectAddress(${idx})">
+                        <div class="font-bold">${addr.fullName}</div>
+                        <div class="text-sm text-gray-600">${addr.address}</div>
+                        ${addr.apartment ? `<div class="text-sm text-gray-600">${addr.apartment}</div>` : ''}
+                        <div class="text-sm text-gray-600">${addr.city}, ${addr.region}</div>
+                        <div class="text-sm text-gray-600">Phone: ${addr.phone}</div>
+                        ${addr.instructions ? `<div class="text-sm text-gray-500 mt-1"><i class="fas fa-info-circle mr-1"></i>${addr.instructions}</div>` : ''}
+                    </div>
+                `).join('');
+            },
+
+            selectAddress(index) {
+                this.selectedAddress = index;
+                this.renderSavedAddresses();
+                this.updatePlaceOrderButton();
+            },
+
+            showAddAddressForm() {
+                document.getElementById('add-address-form').classList.remove('hidden');
+            },
+
+            hideAddAddressForm() {
+                document.getElementById('add-address-form').classList.add('hidden');
+            },
+
+            saveNewAddress(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const newAddress = {
+                    fullName: formData.get('fullName'),
+                    address: formData.get('address'),
+                    apartment: formData.get('apartment'),
+                    city: formData.get('city'),
+                    region: formData.get('region'),
+                    phone: formData.get('phone'),
+                    instructions: formData.get('instructions')
+                };
+                this.savedAddresses.push(newAddress);
+                this.saveAddresses();
+                this.selectedAddress = this.savedAddresses.length - 1;
+                this.hideAddAddressForm();
+                this.renderSavedAddresses();
+                this.updatePlaceOrderButton();
+                this.showToast('Address saved');
+            },
+
+            selectPaymentMethod(method) {
+                this.selectedPaymentMethod = method;
+                document.querySelectorAll('.payment-method-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                document.getElementById(`payment-${method}`).classList.add('selected');
+                this.updatePlaceOrderButton();
+            },
+
+            updateShippingCost(cost) {
+                this.shippingCost = cost;
+                this.updateOrderSummary();
+            },
+
+            renderReviewItems() {
+                const container = document.getElementById('review-items-list');
+                container.innerHTML = this.checkoutCart.map(item => {
+                    const variantText = item.variantDescription ? `(${item.variantDescription})` : '';
+                    return `
+                        <div class="flex gap-4 items-center border-b pb-4">
+                            <img src="${item.image}" class="w-20 h-20 object-cover rounded">
+                            <div class="flex-1 min-w-0">
+                                <div class="font-bold text-sm">${item.name}</div>
+                                <div class="text-sm text-gray-500">${variantText}</div>
+                                <div class="text-sm text-gray-500">Qty: ${item.quantity}</div>
+                                <div class="text-sm font-bold mt-1">${this.formatPrice(item.price)} each</div>
+                            </div>
+                            <div class="font-bold">${this.formatPrice(item.price * item.quantity)}</div>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            updateOrderSummary() {
+                const itemsTotal = this.checkoutCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const itemCount = this.checkoutCart.reduce((sum, item) => sum + item.quantity, 0);
+                const importFees = Math.floor(itemsTotal * 0.15); // 15% import fees
+                const discount = this.checkoutCart.reduce((sum, item) => {
+                    const origPrice = item.originalPrice || item.price;
+                    return sum + ((origPrice - item.price) * item.quantity);
+                }, 0);
+                
+                document.getElementById('summary-item-count').textContent = itemCount;
+                document.getElementById('summary-items-total').textContent = this.formatPrice(itemsTotal);
+                document.getElementById('summary-shipping').textContent = this.shippingCost === 0 ? 'FREE' : this.formatPrice(this.shippingCost);
+                document.getElementById('summary-import').textContent = this.formatPrice(importFees);
+                document.getElementById('summary-discount').textContent = discount > 0 ? `-${this.formatPrice(discount)}` : 'FCFA 0';
+                document.getElementById('summary-total').textContent = this.formatPrice(itemsTotal + this.shippingCost + importFees);
+            },
+
+            updatePlaceOrderButton() {
+                const btn = document.getElementById('place-order-btn');
+                const canPlace = this.checkoutStep === 'review' && 
+                                this.selectedAddress !== null && 
+                                this.selectedPaymentMethod !== null;
+                btn.disabled = !canPlace;
+                if (canPlace) {
+                    const total = document.getElementById('summary-total').textContent;
+                    btn.textContent = `Place your order - ${total}`;
+                } else {
+                    btn.textContent = 'Place your order';
+                }
+            },
+
+            async placeOrder() {
+                if (this.selectedAddress === null || this.selectedPaymentMethod === null) {
+                    this.showToast('Please complete all steps');
+                    return;
+                }
+                
+                const btn = document.getElementById('place-order-btn');
+                btn.disabled = true;
+                btn.textContent = 'Processing...';
+                
                 try {
+                    const itemsTotal = this.checkoutCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    const importFees = Math.floor(itemsTotal * 0.15);
+                    const total = itemsTotal + this.shippingCost + importFees;
+                    
+                    // Calculate estimated delivery
+                    const deliveryDays = this.shippingCost === 0 ? 25 : 14;
+                    const estimatedDelivery = new Date();
+                    estimatedDelivery.setDate(estimatedDelivery.getDate() + deliveryDays);
+                    
                     const order = {
                         user_id: this.currentUser.id,
                         user_email: this.currentUser.email,
-                        items: [...this.cart],
-                        subtotal: this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                        shipping: this.cart.reduce((sum, item) => sum + (Math.floor(item.price * 0.25) * item.quantity), 0),
+                        items: [...this.checkoutCart],
+                        subtotal: itemsTotal,
+                        shipping: this.shippingCost,
+                        importFees: importFees,
+                        total: total,
                         status: 'pending_payment',
                         created_at: new Date().toISOString(),
-                        type: 'standard'
+                        type: 'standard',
+                        shippingAddress: this.savedAddresses[this.selectedAddress],
+                        paymentMethod: this.selectedPaymentMethod,
+                        estimated_delivery: estimatedDelivery.toISOString()
                     };
-                    order.total = order.subtotal + order.shipping;
+                    
                     const { data, error } = await supabaseClient.from('orders').insert([order]).select();
                     if (error) throw error;
+                    
                     const orderId = data[0].id;
-                    this.cart.forEach(item => {
+                    
+                    // Update stock
+                    this.checkoutCart.forEach(item => {
                         const product = products.find(p => p.id === item.id);
                         if (product) {
                             product.stock -= item.quantity;
@@ -3657,19 +4601,49 @@
                             }
                         }
                     });
+                    
+                    // Clear cart
                     this.cart = [];
+                    this.checkoutCart = [];
                     await this.saveCart();
                     this.updateCartCount();
                     this.updateMobileNav();
-                    this.hideCart();
-                    this.showToast(`Order placed! ID: ${orderId.slice(-8)}`);
+                    
+                    // Show confirmation
+                    this.showOrderConfirmation(orderId, estimatedDelivery);
+                    
+                    // Reload orders
                     if (this.currentUser) {
                         this.loadUserOrders(this.currentUser.id);
                     }
+                    
                 } catch (error) {
                     this.showToast('Error placing order: ' + error.message);
+                    btn.disabled = false;
+                    this.updatePlaceOrderButton();
                 }
             },
+
+            showOrderConfirmation(orderId, estimatedDelivery) {
+                this.checkoutStep = 'confirmation';
+                this.updateCheckoutProgress();
+                document.querySelectorAll('.checkout-step').forEach(el => el.classList.remove('active'));
+                document.getElementById('checkout-step-confirmation').classList.add('active');
+                
+                document.getElementById('confirmation-order-number').textContent = `Order #${orderId.slice(-8).toUpperCase()}`;
+                document.getElementById('confirmation-address').textContent = this.savedAddresses[this.selectedAddress]?.city || 'your address';
+                document.getElementById('confirmation-delivery-date').textContent = estimatedDelivery.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                // Hide sidebar on confirmation
+                document.getElementById('checkout-sidebar').style.display = 'none';
+            },
+
+            // ==================== END CHECKOUT ====================
 
             showCustomOrder() { document.getElementById('custom-order-modal').classList.remove('hidden'); },
             closeCustomOrder() { document.getElementById('custom-order-modal').classList.add('hidden'); document.getElementById('custom-order-form').reset(); },
@@ -3749,6 +4723,10 @@
                         password: document.getElementById('login-password').value
                     });
                     this.closeLoginModal();
+                    // If in checkout signin step, proceed to shipping
+                    if (this.checkoutStep === 'signin') {
+                        this.startCheckout('shipping');
+                    }
                 } catch (error) {
                     this.showToast('Login failed: ' + error.message);
                 }
