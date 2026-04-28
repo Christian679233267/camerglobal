@@ -6,6 +6,7 @@
     <title>CamerGlobal - Order from China & USA to Cameroon</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
@@ -1336,10 +1337,47 @@
             color: #007600;
             font-weight: 700;
         }
+        
+        .offline-banner {
+            background: #FEF3C7;
+            border: 1px solid #F59E0B;
+            color: #92400E;
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body class="min-h-screen pb-safe">
+    <!-- Supabase Config -->
+    <script>
+        // ==================== SUPABASE CONFIGURATION ====================
+        // Replace these with your actual Supabase project credentials
+        const SUPABASE_URL = 'https://gxxvxlspmwvftbudgtje.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_3xnT_f6ii0uURN0iq8Uybg_fEwUGk6f';
+        
+        let supabaseClient = null;
+        let useLocalStorageOnly = false;
+        
+        try {
+            if (typeof supabase !== 'undefined' && SUPABASE_URL.includes('supabase.co') && !SUPABASE_URL.includes('your-project')) {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('Supabase connected');
+            } else {
+                console.warn('Supabase not configured - running in localStorage mode');
+                useLocalStorageOnly = true;
+            }
+        } catch (e) {
+            console.warn('Supabase failed to load:', e);
+            useLocalStorageOnly = true;
+        }
+        // ================================================================
+    </script>
+
     <div id="supabase-status" class="supabase-status">Syncing...</div>
+    <div id="offline-banner" class="offline-banner hidden">
+        <i class="fas fa-wifi-slash mr-2"></i>Running in offline mode. Data is stored locally. Connect Supabase to sync across devices.
+    </div>
 
     <!-- HEADER -->
     <header class="sticky top-0 z-50 shadow-lg" id="main-header">
@@ -2921,6 +2959,11 @@
             checkoutCart: [],
 
             async init() {
+                // Show offline banner if no Supabase
+                if (useLocalStorageOnly) {
+                    document.getElementById('offline-banner').classList.remove('hidden');
+                }
+                
                 this.renderHorizontalProducts();
                 this.renderVerticalColumns();
                 this.renderDeals();
@@ -3035,45 +3078,55 @@
             },
 
             async setupAuth() {
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                this.currentUser = session?.user || null;
-                if (this.currentUser) {
-                    await this.loadUserCart(this.currentUser.id);
-                    await this.loadUserOrders(this.currentUser.id);
-                } else {
-                    this.cart = JSON.parse(localStorage.getItem('camerglobal_cart') || '[]');
-                    this.updateCartCount();
-                    this.updateMobileNav();
-                }
-                this.updateUI();
-
-                supabaseClient.auth.onAuthStateChange(async (event, session) => {
-                    this.currentUser = session?.user || null;
-                    this.updateUI();
-                    if (this.currentUser) {
-                        await this.loadUserCart(this.currentUser.id);
-                        await this.loadUserOrders(this.currentUser.id);
-                    } else {
-                        this.cart = JSON.parse(localStorage.getItem('camerglobal_cart') || '[]');
-                        this.orders = [];
-                        this.updateCartCount();
-                        this.updateMobileNav();
-                        this.renderOrders();
+                // Try Supabase first
+                if (supabaseClient) {
+                    try {
+                        const { data: { session } } = await supabaseClient.auth.getSession();
+                        if (session?.user) {
+                            this.currentUser = session.user;
+                            await this.loadUserCart(this.currentUser.id);
+                            await this.loadUserOrders(this.currentUser.id);
+                            this.updateUI();
+                            return;
+                        }
+                    } catch (e) {
+                        console.warn('Supabase auth failed, using localStorage');
                     }
-                });
+                }
+                
+                // Fallback to localStorage auth
+                const localUser = localStorage.getItem('camerglobal_user');
+                if (localUser) {
+                    this.currentUser = JSON.parse(localUser);
+                }
+                
+                this.cart = JSON.parse(localStorage.getItem('camerglobal_cart') || '[]');
+                this.orders = JSON.parse(localStorage.getItem('camerglobal_orders') || '[]').map(o => ({
+                    ...o,
+                    createdAt: new Date(o.createdAt),
+                    paymentDate: o.paymentDate ? new Date(o.paymentDate) : null,
+                    processingDate: o.processingDate ? new Date(o.processingDate) : null,
+                    shippedDate: o.shippedDate ? new Date(o.shippedDate) : null,
+                    deliveredDate: o.deliveredDate ? new Date(o.deliveredDate) : null,
+                    cancelledAt: o.cancelledAt ? new Date(o.cancelledAt) : null,
+                    estimatedDelivery: o.estimatedDelivery ? new Date(o.estimatedDelivery) : null
+                }));
+                this.updateCartCount();
+                this.updateMobileNav();
+                this.updateUI();
             },
 
             updateUI() {
                 const user = this.currentUser;
-                const displayName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'sign in';
+                const displayName = user?.user_metadata?.name || user?.name || user?.email?.split('@')[0] || 'sign in';
                 document.getElementById('user-name').textContent = displayName;
-                document.getElementById('sidebar-user').textContent = user ? (user.user_metadata?.name || 'User') : 'Guest';
+                document.getElementById('sidebar-user').textContent = user ? (user.user_metadata?.name || user.name || 'User') : 'Guest';
                 if (user) {
                     document.getElementById('sidebar-signin').classList.add('hidden');
                     document.getElementById('sidebar-signout').classList.remove('hidden');
                     document.querySelector('#account-dropdown .text-center').innerHTML = `
                         <div class="text-left mb-3">
-                            <div class="font-bold">${user.user_metadata?.name || user.email}</div>
+                            <div class="font-bold">${user.user_metadata?.name || user.name || user.email}</div>
                         </div>
                         <button onclick="app.logout()" class="amazon-btn-secondary w-full py-2 text-sm font-bold rounded-sm">Sign Out</button>
                     `;
@@ -3090,6 +3143,7 @@
             },
 
             async loadUserCart(userId) {
+                if (!supabaseClient) return;
                 const { data, error } = await supabaseClient
                     .from('carts')
                     .select('*')
@@ -3103,6 +3157,10 @@
             },
 
             async loadUserOrders(userId) {
+                if (!supabaseClient) {
+                    // Already loaded from localStorage in setupAuth
+                    return;
+                }
                 const { data, error } = await supabaseClient
                     .from('orders')
                     .select('*')
@@ -3127,14 +3185,25 @@
             },
 
             async saveCart() {
-                if (this.currentUser) {
-                    await supabaseClient.from('carts').upsert({
-                        user_id: this.currentUser.id,
-                        items: this.cart,
-                        updated_at: new Date().toISOString()
-                    });
+                if (this.currentUser && supabaseClient) {
+                    try {
+                        await supabaseClient.from('carts').upsert({
+                            user_id: this.currentUser.id,
+                            items: this.cart,
+                            updated_at: new Date().toISOString()
+                        });
+                    } catch (e) {
+                        console.warn('Failed to save cart to Supabase');
+                    }
                 }
                 localStorage.setItem('camerglobal_cart', JSON.stringify(this.cart));
+            },
+
+            async saveOrders() {
+                if (this.currentUser && supabaseClient) {
+                    // Supabase orders are already saved via insert
+                }
+                localStorage.setItem('camerglobal_orders', JSON.stringify(this.orders));
             },
 
             formatPrice(price) {
@@ -4154,16 +4223,19 @@
             async cancelOrder(orderId) {
                 if (!confirm('Are you sure you want to cancel this order?')) return;
                 try {
-                    await supabaseClient.from('orders').update({
-                        status: 'cancelled',
-                        cancelled_at: new Date().toISOString(),
-                        cancel_reason: 'Cancelled by customer'
-                    }).eq('id', orderId);
+                    if (supabaseClient) {
+                        await supabaseClient.from('orders').update({
+                            status: 'cancelled',
+                            cancelled_at: new Date().toISOString(),
+                            cancel_reason: 'Cancelled by customer'
+                        }).eq('id', orderId);
+                    }
                     const order = this.orders.find(o => o.id === orderId);
                     if (order) {
                         order.status = 'cancelled';
                         order.cancelledAt = new Date();
                     }
+                    this.saveOrders();
                     this.renderOrders();
                     this.showToast('Order cancelled successfully');
                 } catch (error) {
@@ -4180,13 +4252,16 @@
                     const newCity = prompt('Update city:', order.city || '');
                     if (newCity === null) return;
                     try {
-                        await supabaseClient.from('orders').update({
-                            phone: newPhone,
-                            city: newCity,
-                            updated_at: new Date().toISOString()
-                        }).eq('id', orderId);
+                        if (supabaseClient) {
+                            await supabaseClient.from('orders').update({
+                                phone: newPhone,
+                                city: newCity,
+                                updated_at: new Date().toISOString()
+                            }).eq('id', orderId);
+                        }
                         order.phone = newPhone;
                         order.city = newCity;
+                        this.saveOrders();
                         this.renderOrders();
                         this.showToast('Order updated successfully');
                     } catch (error) {
@@ -4568,9 +4643,12 @@
                     const estimatedDelivery = new Date();
                     estimatedDelivery.setDate(estimatedDelivery.getDate() + deliveryDays);
                     
+                    const orderId = 'CG-' + Date.now().toString(36).toUpperCase();
+                    
                     const order = {
-                        user_id: this.currentUser.id,
-                        user_email: this.currentUser.email,
+                        id: orderId,
+                        user_id: this.currentUser?.id || 'local-user',
+                        user_email: this.currentUser?.email || 'local@user.com',
                         items: [...this.checkoutCart],
                         subtotal: itemsTotal,
                         shipping: this.shippingCost,
@@ -4578,16 +4656,30 @@
                         total: total,
                         status: 'pending_payment',
                         created_at: new Date().toISOString(),
+                        createdAt: new Date(),
                         type: 'standard',
                         shippingAddress: this.savedAddresses[this.selectedAddress],
                         paymentMethod: this.selectedPaymentMethod,
-                        estimated_delivery: estimatedDelivery.toISOString()
+                        estimated_delivery: estimatedDelivery.toISOString(),
+                        estimatedDelivery: estimatedDelivery
                     };
                     
-                    const { data, error } = await supabaseClient.from('orders').insert([order]).select();
-                    if (error) throw error;
+                    // Save to Supabase if available
+                    if (supabaseClient) {
+                        try {
+                            await supabaseClient.from('orders').insert([{
+                                ...order,
+                                created_at: order.created_at,
+                                estimated_delivery: order.estimated_delivery
+                            }]);
+                        } catch (e) {
+                            console.warn('Supabase order save failed, using localStorage');
+                        }
+                    }
                     
-                    const orderId = data[0].id;
+                    // Always save to localStorage
+                    this.orders.unshift(order);
+                    this.saveOrders();
                     
                     // Update stock
                     this.checkoutCart.forEach(item => {
@@ -4611,11 +4703,6 @@
                     
                     // Show confirmation
                     this.showOrderConfirmation(orderId, estimatedDelivery);
-                    
-                    // Reload orders
-                    if (this.currentUser) {
-                        this.loadUserOrders(this.currentUser.id);
-                    }
                     
                 } catch (error) {
                     this.showToast('Error placing order: ' + error.message);
@@ -4692,76 +4779,144 @@
                 e.preventDefault();
                 if (!this.currentUser) { this.closeCustomOrder(); this.showLoginModal(); return; }
                 const formData = new FormData(e.target);
-                try {
-                    await supabaseClient.from('orders').insert([{
-                        user_id: this.currentUser.id,
-                        user_email: this.currentUser.email,
-                        type: 'custom',
-                        url: formData.get('url'),
-                        name: formData.get('productName'),
-                        price: formData.get('expectedPrice'),
-                        customer_name: formData.get('customerName'),
-                        phone: formData.get('phone'),
-                        city: formData.get('city'),
-                        details: formData.get('details'),
-                        status: 'pending_review',
-                        created_at: new Date().toISOString()
-                    }]);
-                    this.closeCustomOrder();
-                    this.showToast('Custom order submitted!');
-                    this.loadUserOrders(this.currentUser.id);
-                } catch (error) {
-                    this.showToast('Error submitting order');
+                
+                const orderId = 'CG-CUSTOM-' + Date.now().toString(36).toUpperCase();
+                const order = {
+                    id: orderId,
+                    user_id: this.currentUser?.id || 'local-user',
+                    user_email: this.currentUser?.email || 'local@user.com',
+                    type: 'custom',
+                    url: formData.get('url'),
+                    name: formData.get('productName'),
+                    price: formData.get('expectedPrice'),
+                    customer_name: formData.get('customerName'),
+                    phone: formData.get('phone'),
+                    city: formData.get('city'),
+                    details: formData.get('details'),
+                    status: 'pending_review',
+                    created_at: new Date().toISOString(),
+                    createdAt: new Date()
+                };
+                
+                if (supabaseClient) {
+                    try {
+                        await supabaseClient.from('orders').insert([order]);
+                    } catch (e) {
+                        console.warn('Supabase custom order failed');
+                    }
                 }
+                
+                this.orders.unshift(order);
+                this.saveOrders();
+                this.closeCustomOrder();
+                this.showToast('Custom order submitted!');
+                this.renderOrders();
             },
 
             async handleLogin(e) {
                 e.preventDefault();
-                try {
-                    await supabaseClient.auth.signInWithPassword({
-                        email: document.getElementById('login-email').value,
-                        password: document.getElementById('login-password').value
-                    });
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                // Try Supabase first
+                if (supabaseClient) {
+                    try {
+                        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                        if (!error && data.user) {
+                            this.currentUser = data.user;
+                            this.closeLoginModal();
+                            await this.loadUserCart(data.user.id);
+                            await this.loadUserOrders(data.user.id);
+                            this.updateUI();
+                            if (this.checkoutStep === 'signin') {
+                                this.startCheckout('shipping');
+                            }
+                            return;
+                        }
+                    } catch (e) {
+                        console.warn('Supabase login failed, trying localStorage');
+                    }
+                }
+                
+                // LocalStorage fallback auth
+                const users = JSON.parse(localStorage.getItem('camerglobal_users') || '[]');
+                const user = users.find(u => u.email === email && u.password === password);
+                if (user) {
+                    this.currentUser = { ...user, id: user.email };
+                    localStorage.setItem('camerglobal_user', JSON.stringify(this.currentUser));
                     this.closeLoginModal();
-                    // If in checkout signin step, proceed to shipping
+                    this.updateUI();
                     if (this.checkoutStep === 'signin') {
                         this.startCheckout('shipping');
                     }
-                } catch (error) {
-                    this.showToast('Login failed: ' + error.message);
+                    this.showToast('Signed in successfully');
+                } else {
+                    this.showToast('Invalid email or password');
                 }
             },
 
             async handleRegister(e) {
                 e.preventDefault();
-                try {
-                    const name = document.getElementById('register-name').value;
-                    const email = document.getElementById('register-email').value;
-                    const password = document.getElementById('register-password').value;
-                    const { data, error } = await supabaseClient.auth.signUp({
-                        email,
-                        password,
-                        options: { data: { name } }
-                    });
-                    if (error) throw error;
-                    await supabaseClient.from('profiles').upsert({
-                        id: data.user.id,
-                        name: name,
-                        email: email,
-                        created_at: new Date().toISOString()
-                    });
-                    this.closeRegisterModal();
-                } catch (error) {
-                    this.showToast('Registration failed: ' + error.message);
+                const name = document.getElementById('register-name').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                
+                // Try Supabase first
+                if (supabaseClient) {
+                    try {
+                        const { data, error } = await supabaseClient.auth.signUp({
+                            email,
+                            password,
+                            options: { data: { name } }
+                        });
+                        if (!error && data.user) {
+                            await supabaseClient.from('profiles').upsert({
+                                id: data.user.id,
+                                name: name,
+                                email: email,
+                                created_at: new Date().toISOString()
+                            });
+                            this.closeRegisterModal();
+                            this.showToast('Account created! Please check your email to confirm.');
+                            return;
+                        }
+                    } catch (e) {
+                        console.warn('Supabase register failed, using localStorage');
+                    }
                 }
+                
+                // LocalStorage fallback
+                const users = JSON.parse(localStorage.getItem('camerglobal_users') || '[]');
+                if (users.find(u => u.email === email)) {
+                    this.showToast('Email already registered');
+                    return;
+                }
+                
+                const newUser = { name, email, password, user_metadata: { name } };
+                users.push(newUser);
+                localStorage.setItem('camerglobal_users', JSON.stringify(users));
+                
+                // Auto sign in
+                this.currentUser = { ...newUser, id: email };
+                localStorage.setItem('camerglobal_user', JSON.stringify(this.currentUser));
+                this.closeRegisterModal();
+                this.updateUI();
+                this.showToast('Account created and signed in!');
             },
 
             async logout() {
-                await supabaseClient.auth.signOut();
+                if (supabaseClient) {
+                    try {
+                        await supabaseClient.auth.signOut();
+                    } catch (e) {}
+                }
+                localStorage.removeItem('camerglobal_user');
+                this.currentUser = null;
                 this.cart = [];
                 this.orders = [];
                 this.updateCartCount();
                 this.updateMobileNav();
+                this.updateUI();
                 this.showToast('Signed out');
             },
 
