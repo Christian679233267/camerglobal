@@ -6,8 +6,6 @@
     <title>CamerGlobal - Order from China & USA to Cameroon</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.47.10/dist/umd/supabase.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -31,11 +29,6 @@
                             'text-gray': '#565959',
                             'selected': '#007185',
                             'selected-bg': '#F0F2F2'
-                        },
-                        camer: {
-                            green: '#10B981',
-                            'green-light': '#D1FAE5',
-                            'green-bg': '#ECFDF5'
                         }
                     },
                     fontFamily: {
@@ -173,34 +166,9 @@
             font-size: clamp(14px, 3vw, 16px);
         }
         
-        .prime-badge {
-            background: #00A8E1;
-            color: white;
-            font-size: 12px;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-style: italic;
-            font-weight: 700;
-        }
-        
         .stars {
             color: #FFA41C;
             letter-spacing: -1px;
-        }
-        
-        .price-symbol {
-            position: relative;
-            top: -0.5em;
-            font-size: 12px;
-        }
-        .price-whole {
-            font-size: clamp(20px, 5vw, 28px);
-            font-weight: 400;
-        }
-        .price-fraction {
-            position: relative;
-            top: -0.5em;
-            font-size: 12px;
         }
         
         .horizontal-scroll {
@@ -232,16 +200,6 @@
             max-height: 420px;
             scrollbar-width: thin;
             scrollbar-color: #cdcdcd transparent;
-        }
-        .vertical-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-        .vertical-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .vertical-scroll::-webkit-scrollbar-thumb {
-            background-color: #cdcdcd;
-            border-radius: 3px;
         }
         
         .banner-container {
@@ -286,7 +244,6 @@
                 min-width: calc(50% - 6px);
             }
         }
-        
         @media (min-width: 1024px) {
             .floating-banner {
                 min-width: calc(33.333% - 11px);
@@ -303,18 +260,6 @@
             transform: scale(1.05);
         }
         
-        .product-column {
-            min-width: 240px;
-            max-width: 100%;
-            flex-shrink: 0;
-        }
-        @media (min-width: 768px) {
-            .product-column {
-                min-width: 280px;
-                max-width: 280px;
-            }
-        }
-        
         .sidebar {
             transform: translateX(-100%);
             transition: transform 0.3s ease;
@@ -323,13 +268,6 @@
         }
         .sidebar.open {
             transform: translateX(0);
-        }
-        
-        .modal {
-            display: none;
-        }
-        .modal.active {
-            display: flex;
         }
         
         @keyframes fadeIn {
@@ -471,7 +409,6 @@
             .category-hero {
                 padding: 40px 20px;
                 margin: -16px -16px 20px -16px;
-                border-radius: 8px 8px 0 0;
             }
         }
         
@@ -547,10 +484,6 @@
             border-color: #007185;
             box-shadow: 0 0 0 2px white, 0 0 0 4px #007185;
         }
-        .variant-swatch.unavailable {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
         .variant-swatch-inner {
             width: 100%;
             height: 100%;
@@ -582,12 +515,6 @@
             border-color: #007185;
             box-shadow: inset 0 0 0 1px #007185;
             font-weight: 700;
-        }
-        .variant-button.unavailable {
-            background: #F7FAFA;
-            color: #565959;
-            border-style: dashed;
-            opacity: 0.6;
         }
         
         .size-button {
@@ -635,10 +562,6 @@
             font-size: 13px;
             position: relative;
             top: -0.75em;
-        }
-        .price-display .amount {
-            font-size: clamp(22px, 5vw, 28px);
-            font-weight: 400;
         }
         
         .stock-status {
@@ -715,11 +638,9 @@
             z-index: 100;
             display: none;
         }
-        
         .live-search-dropdown.active {
             display: block;
         }
-        
         .live-search-item {
             padding: 16px;
             cursor: pointer;
@@ -729,11 +650,9 @@
             gap: 12px;
             min-height: 48px;
         }
-        
         .live-search-item:hover {
             background: #F7FAFA;
         }
-        
         .live-search-item img {
             width: 48px;
             height: 48px;
@@ -748,7 +667,6 @@
             margin-bottom: 16px;
             overflow: hidden;
         }
-        
         .order-header {
             background: #F0F2F2;
             padding: 12px 16px;
@@ -759,7 +677,6 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-        
         .order-status-badge {
             padding: 4px 12px;
             border-radius: 12px;
@@ -767,7 +684,6 @@
             font-weight: bold;
             text-transform: uppercase;
         }
-        
         .status-pending { background: #FEBD69; color: #131921; }
         .status-processing { background: #00A8E1; color: white; }
         .status-shipped { background: #007185; color: white; }
@@ -783,11 +699,9 @@
             border-left: 2px solid #D5D9D9;
             margin-left: 8px;
         }
-        
         .tracking-line.active {
             border-left-color: #007185;
         }
-        
         .tracking-line::before {
             content: '';
             position: absolute;
@@ -798,11 +712,9 @@
             border-radius: 50%;
             background: #D5D9D9;
         }
-        
         .tracking-line.active::before {
             background: #007185;
         }
-        
         .tracking-line.completed::before {
             background: #007600;
             content: '✓';
@@ -822,7 +734,6 @@
             font-size: 11px;
             font-weight: bold;
         }
-        
         .stock-in { background: #007600; color: white; }
         .stock-low { background: #F7CA00; color: #131921; }
         .stock-out { background: #B12704; color: white; }
@@ -845,7 +756,6 @@
                 display: none;
             }
         }
-        
         .mobile-nav-item {
             display: flex;
             flex-direction: column;
@@ -906,30 +816,17 @@
             scroll-behavior: smooth;
         }
         
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-
-        /* AMAZON CHECKOUT STYLES */
         .checkout-step {
             display: none;
         }
         .checkout-step.active {
             display: block;
         }
-        
         .checkout-progress {
             background: white;
             border-bottom: 1px solid #D5D9D9;
             padding: 16px;
         }
-        
         .checkout-progress-bar {
             display: flex;
             align-items: center;
@@ -938,7 +835,6 @@
             max-width: 600px;
             margin: 0 auto;
         }
-        
         .checkout-step-indicator {
             display: flex;
             align-items: center;
@@ -946,16 +842,13 @@
             font-size: 12px;
             color: #565959;
         }
-        
         .checkout-step-indicator.active {
             color: #FF9900;
             font-weight: 700;
         }
-        
         .checkout-step-indicator.completed {
             color: #007600;
         }
-        
         .checkout-step-indicator .step-number {
             width: 24px;
             height: 24px;
@@ -968,25 +861,20 @@
             font-size: 12px;
             font-weight: 700;
         }
-        
         .checkout-step-indicator.active .step-number {
             background: #FF9900;
         }
-        
         .checkout-step-indicator.completed .step-number {
             background: #007600;
         }
-        
         .checkout-step-indicator.completed .step-number::after {
             content: '✓';
         }
-        
         .checkout-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 16px;
         }
-        
         @media (min-width: 768px) {
             .checkout-container {
                 padding: 24px;
@@ -995,30 +883,25 @@
                 gap: 24px;
             }
         }
-        
         .checkout-main {
             background: white;
             border-radius: 8px;
             border: 1px solid #D5D9D9;
             overflow: hidden;
         }
-        
         .checkout-section {
             border-bottom: 1px solid #D5D9D9;
             padding: 20px;
         }
-        
         .checkout-section:last-child {
             border-bottom: none;
         }
-        
         .checkout-section-header {
             display: flex;
             align-items: center;
             gap: 12px;
             margin-bottom: 16px;
         }
-        
         .checkout-section-number {
             width: 32px;
             height: 32px;
@@ -1032,21 +915,17 @@
             font-weight: 700;
             flex-shrink: 0;
         }
-        
         .checkout-section-number.completed {
             background: #007600;
         }
-        
         .checkout-section-number.completed::after {
             content: '✓';
         }
-        
         .checkout-section-title {
             font-size: 18px;
             font-weight: 700;
             color: #0F1111;
         }
-        
         .checkout-section-title .edit-link {
             font-size: 14px;
             color: #007185;
@@ -1054,12 +933,10 @@
             margin-left: 12px;
             cursor: pointer;
         }
-        
         .checkout-section-title .edit-link:hover {
             color: #C7511F;
             text-decoration: underline;
         }
-        
         .address-card {
             border: 2px solid #D5D9D9;
             border-radius: 8px;
@@ -1068,16 +945,13 @@
             transition: all 0.2s;
             position: relative;
         }
-        
         .address-card:hover {
             border-color: #007185;
         }
-        
         .address-card.selected {
             border-color: #FF9900;
             background: #FFFBF0;
         }
-        
         .address-card.selected::before {
             content: '✓';
             position: absolute;
@@ -1094,7 +968,6 @@
             font-size: 12px;
             font-weight: 700;
         }
-        
         .payment-method-card {
             border: 2px solid #D5D9D9;
             border-radius: 8px;
@@ -1105,16 +978,13 @@
             align-items: center;
             gap: 12px;
         }
-        
         .payment-method-card:hover {
             border-color: #007185;
         }
-        
         .payment-method-card.selected {
             border-color: #FF9900;
             background: #FFFBF0;
         }
-        
         .payment-method-card .radio-circle {
             width: 20px;
             height: 20px;
@@ -1123,11 +993,9 @@
             flex-shrink: 0;
             position: relative;
         }
-        
         .payment-method-card.selected .radio-circle {
             border-color: #FF9900;
         }
-        
         .payment-method-card.selected .radio-circle::after {
             content: '';
             position: absolute;
@@ -1139,7 +1007,6 @@
             background: #FF9900;
             border-radius: 50%;
         }
-        
         .checkout-sidebar {
             background: white;
             border-radius: 8px;
@@ -1149,21 +1016,18 @@
             position: sticky;
             top: 80px;
         }
-        
         .checkout-sidebar-title {
             font-size: 18px;
             font-weight: 700;
             color: #B12704;
             margin-bottom: 16px;
         }
-        
         .order-summary-item {
             display: flex;
             justify-content: space-between;
             margin-bottom: 8px;
             font-size: 14px;
         }
-        
         .order-summary-total {
             display: flex;
             justify-content: space-between;
@@ -1174,7 +1038,6 @@
             font-weight: 700;
             color: #B12704;
         }
-        
         .place-order-btn {
             background: linear-gradient(to bottom, #FFD814 0%, #F7CA00 100%);
             border: 1px solid #FCD200;
@@ -1187,16 +1050,13 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        
         .place-order-btn:hover {
             background: linear-gradient(to bottom, #F7CA00 0%, #F0B800 100%);
         }
-        
         .place-order-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
         .checkout-input {
             width: 100%;
             padding: 12px;
@@ -1205,13 +1065,11 @@
             font-size: 14px;
             transition: all 0.2s;
         }
-        
         .checkout-input:focus {
             outline: none;
             border-color: #007185;
             box-shadow: 0 0 0 3px rgba(0,113,133,0.1);
         }
-        
         .checkout-label {
             display: block;
             font-size: 14px;
@@ -1219,29 +1077,19 @@
             margin-bottom: 6px;
             color: #0F1111;
         }
-        
         .checkout-form-row {
             margin-bottom: 16px;
         }
-        
         .checkout-form-row.half {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
-        
-        @media (min-width: 768px) {
-            .checkout-form-row.half {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        
         .checkout-divider {
             text-align: center;
             position: relative;
             margin: 20px 0;
         }
-        
         .checkout-divider::before {
             content: '';
             position: absolute;
@@ -1251,7 +1099,6 @@
             height: 1px;
             background: #D5D9D9;
         }
-        
         .checkout-divider span {
             background: white;
             padding: 0 12px;
@@ -1259,35 +1106,10 @@
             font-size: 12px;
             color: #565959;
         }
-        
-        .supabase-status {
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            padding: 4px 12px;
-            border-radius: 0 0 8px 8px;
-            font-size: 11px;
-            font-weight: bold;
-            display: none;
-        }
-        .supabase-status.online {
-            display: block;
-            background: #007600;
-            color: white;
-        }
-        .supabase-status.offline {
-            display: block;
-            background: #B12704;
-            color: white;
-        }
-        
         .order-confirmation {
             text-align: center;
             padding: 40px 20px;
         }
-        
         .order-confirmation-icon {
             width: 80px;
             height: 80px;
@@ -1300,26 +1122,22 @@
             color: white;
             font-size: 40px;
         }
-        
         .order-confirmation h2 {
             font-size: 24px;
             font-weight: 700;
             color: #0F1111;
             margin-bottom: 12px;
         }
-        
         .order-confirmation p {
             color: #565959;
             margin-bottom: 8px;
         }
-        
         .order-confirmation .order-number {
             font-size: 18px;
             font-weight: 700;
             color: #007185;
             margin: 16px 0;
         }
-        
         .estimated-delivery {
             background: #F0F2F2;
             border-radius: 8px;
@@ -1327,12 +1145,10 @@
             margin: 20px 0;
             text-align: left;
         }
-        
         .estimated-delivery h4 {
             font-weight: 700;
             margin-bottom: 8px;
         }
-        
         .estimated-delivery-date {
             color: #007600;
             font-weight: 700;
@@ -1340,7 +1156,6 @@
     </style>
 </head>
 <body class="min-h-screen pb-safe">
-    <div id="supabase-status" class="supabase-status">Syncing...</div>
 
     <!-- HEADER -->
     <header class="sticky top-0 z-50 shadow-lg" id="main-header">
@@ -1469,7 +1284,7 @@
         </div>
     </header>
 
-    <!-- CHECKOUT HEADER (shown during checkout) -->
+    <!-- CHECKOUT HEADER -->
     <header id="checkout-header" class="bg-amazon-dark text-white hidden">
         <div class="max-w-[1200px] mx-auto px-4 h-[60px] flex items-center justify-between">
             <a href="#" onclick="app.goHome(); return false;" class="logo-smile">
@@ -2209,11 +2024,11 @@
             </div>
         </div>
 
-        <!-- AMAZON-STYLE CHECKOUT -->
+        <!-- CHECKOUT VIEW -->
         <div id="checkout-view" class="hidden">
             <div class="checkout-container">
                 <div class="checkout-main">
-                    <!-- Step 1: Sign In (if not signed in) -->
+                    <!-- Step 1: Sign In -->
                     <div id="checkout-step-signin" class="checkout-step active">
                         <div class="checkout-section">
                             <div class="checkout-section-header">
@@ -2243,9 +2058,7 @@
                                 </div>
                             </div>
                             <div id="checkout-shipping-content">
-                                <div class="space-y-3" id="saved-addresses">
-                                    <!-- Addresses rendered here -->
-                                </div>
+                                <div class="space-y-3" id="saved-addresses"></div>
                                 <div class="checkout-divider"><span>or</span></div>
                                 <button onclick="app.showAddAddressForm()" class="amazon-btn-secondary w-full py-3 rounded font-bold">
                                     <i class="fas fa-plus mr-2"></i>Add a new address
@@ -2442,7 +2255,7 @@
                     </div>
                 </div>
 
-                <!-- Checkout Sidebar (Order Summary) -->
+                <!-- Checkout Sidebar -->
                 <div class="checkout-sidebar" id="checkout-sidebar">
                     <div class="checkout-sidebar-title">Order Summary</div>
                     <div id="order-summary-content">
@@ -2877,159 +2690,131 @@
     <div id="toast-container" class="fixed bottom-20 md:bottom-4 right-4 z-[100] space-y-2"></div>
 
     <script>
-        // ==================== MOCK SUPABASE CLIENT (works without internet) ====================
-        function createMockSupabase() {
-            const DB_KEYS = {
-                users: 'cg_mock_users',
-                carts: 'cg_mock_carts',
-                orders: 'cg_mock_orders',
-                profiles: 'cg_mock_profiles',
-                session: 'cg_mock_session'
-            };
+        // ==================== MOCK SUPABASE CLIENT (localStorage) ====================
+        const MockSupabase = {
+            users: JSON.parse(localStorage.getItem('camerglobal_users') || '[]'),
+            carts: JSON.parse(localStorage.getItem('camerglobal_carts') || '{}'),
+            orders: JSON.parse(localStorage.getItem('camerglobal_orders') || '[]'),
+            currentSession: JSON.parse(localStorage.getItem('camerglobal_session') || 'null'),
+            authListeners: [],
             
-            const get = (key) => JSON.parse(localStorage.getItem(key) || '[]');
-            const set = (key, val) => localStorage.setItem(key, JSON.stringify(val));
+            _saveUsers() { localStorage.setItem('camerglobal_users', JSON.stringify(this.users)); },
+            _saveCarts() { localStorage.setItem('camerglobal_carts', JSON.stringify(this.carts)); },
+            _saveOrders() { localStorage.setItem('camerglobal_orders', JSON.stringify(this.orders)); },
+            _saveSession() { localStorage.setItem('camerglobal_session', JSON.stringify(this.currentSession)); },
             
-            // Auth state listeners
-            let authListeners = [];
-            
-            const mockAuth = {
-                getSession: async () => {
-                    const session = JSON.parse(localStorage.getItem(DB_KEYS.session) || 'null');
-                    return { data: { session }, error: null };
+            auth: {
+                getSession() {
+                    return Promise.resolve({ data: { session: MockSupabase.currentSession }, error: null });
                 },
-                signInWithPassword: async ({ email, password }) => {
-                    const users = get(DB_KEYS.users);
-                    const user = users.find(u => u.email === email && u.password === password);
-                    if (!user) throw new Error('Invalid login credentials');
+                signInWithPassword({ email, password }) {
+                    const user = MockSupabase.users.find(u => u.email === email && u.password === password);
+                    if (!user) return Promise.reject(new Error('Invalid login credentials'));
                     const session = { user: { id: user.id, email: user.email, user_metadata: user.user_metadata } };
-                    localStorage.setItem(DB_KEYS.session, JSON.stringify(session));
-                    authListeners.forEach(cb => cb('SIGNED_IN', session));
-                    return { data: { user: session.user, session }, error: null };
+                    MockSupabase.currentSession = session;
+                    MockSupabase._saveSession();
+                    MockSupabase.authListeners.forEach(cb => cb('SIGNED_IN', session));
+                    return Promise.resolve({ data: { user: session.user, session }, error: null });
                 },
-                signUp: async ({ email, password, options }) => {
-                    const users = get(DB_KEYS.users);
-                    if (users.find(u => u.email === email)) throw new Error('User already registered');
-                    const user = { 
-                        id: 'u_' + Date.now(), 
-                        email, 
-                        password, 
+                signUp({ email, password, options }) {
+                    if (MockSupabase.users.find(u => u.email === email)) {
+                        return Promise.reject(new Error('User already registered'));
+                    }
+                    const user = {
+                        id: 'user_' + Date.now(),
+                        email,
+                        password,
                         user_metadata: options?.data || {},
                         created_at: new Date().toISOString()
                     };
-                    users.push(user);
-                    set(DB_KEYS.users, users);
+                    MockSupabase.users.push(user);
+                    MockSupabase._saveUsers();
                     const session = { user: { id: user.id, email: user.email, user_metadata: user.user_metadata } };
-                    localStorage.setItem(DB_KEYS.session, JSON.stringify(session));
-                    authListeners.forEach(cb => cb('SIGNED_IN', session));
-                    return { data: { user: session.user, session }, error: null };
+                    MockSupabase.currentSession = session;
+                    MockSupabase._saveSession();
+                    MockSupabase.authListeners.forEach(cb => cb('SIGNED_IN', session));
+                    return Promise.resolve({ data: { user: session.user, session }, error: null });
                 },
-                signOut: async () => {
-                    localStorage.removeItem(DB_KEYS.session);
-                    authListeners.forEach(cb => cb('SIGNED_OUT', null));
-                    return { error: null };
+                signOut() {
+                    MockSupabase.currentSession = null;
+                    MockSupabase._saveSession();
+                    MockSupabase.authListeners.forEach(cb => cb('SIGNED_OUT', null));
+                    return Promise.resolve({ error: null });
                 },
-                onAuthStateChange: (callback) => {
-                    authListeners.push(callback);
-                    // Return unsubscribe function
-                    return { data: { subscription: { unsubscribe: () => {
-                        authListeners = authListeners.filter(cb => cb !== callback);
-                    }}}};
+                onAuthStateChange(callback) {
+                    MockSupabase.authListeners.push(callback);
+                    return { data: { subscription: { unsubscribe: () => {} } } };
                 }
-            };
+            },
             
-            const mockFrom = (table) => {
-                let data = get(DB_KEYS[table] || 'cg_mock_' + table);
-                let filters = [];
-                let eqFilters = {};
-                let single = false;
-                let orderCol = null;
-                let orderAsc = true;
-                
-                const chain = {
-                    select: () => chain,
-                    eq: (col, val) => { eqFilters[col] = val; return chain; },
-                    order: (col, opts) => { orderCol = col; orderAsc = opts?.ascending !== false; return chain; },
-                    single: () => { single = true; return chain; },
-                    insert: (rows) => {
-                        const arr = Array.isArray(rows) ? rows : [rows];
-                        arr.forEach(row => {
-                            row.id = row.id || (table.slice(0,3) + '_' + Date.now() + Math.random().toString(36).substr(2,6));
-                            row.created_at = row.created_at || new Date().toISOString();
-                            data.push(row);
-                        });
-                        set(DB_KEYS[table] || 'cg_mock_' + table, data);
-                        return { data: arr, error: null };
+            from(table) {
+                const self = this;
+                return {
+                    select(columns) {
+                        this._columns = columns;
+                        return this;
                     },
-                    upsert: (rows) => {
-                        const arr = Array.isArray(rows) ? rows : [rows];
-                        arr.forEach(row => {
-                            const idx = data.findIndex(d => d.id === row.id || (row.user_id && d.user_id === row.user_id));
-                            if (idx >= 0) data[idx] = { ...data[idx], ...row, updated_at: new Date().toISOString() };
-                            else {
-                                row.id = row.id || (table.slice(0,3) + '_' + Date.now());
-                                row.created_at = new Date().toISOString();
-                                data.push(row);
+                    eq(column, value) {
+                        this._filters = this._filters || [];
+                        this._filters.push({ column, value });
+                        return this;
+                    },
+                    order(column, { ascending } = {}) {
+                        this._order = { column, ascending };
+                        return this;
+                    },
+                    single() {
+                        let data = self[table] || [];
+                        if (this._filters) {
+                            this._filters.forEach(f => {
+                                data = data.filter(row => row[f.column] === f.value);
+                            });
+                        }
+                        return Promise.resolve({ data: data[0] || null, error: data[0] ? null : new Error('Not found') });
+                    },
+                    async upsert(records) {
+                        const arr = self[table] || [];
+                        records = Array.isArray(records) ? records : [records];
+                        records.forEach(record => {
+                            const idx = arr.findIndex(r => r.user_id === record.user_id);
+                            if (idx >= 0) arr[idx] = { ...arr[idx], ...record };
+                            else arr.push(record);
+                        });
+                        self[table] = arr;
+                        self['_save' + table.charAt(0).toUpperCase() + table.slice(1)]();
+                        return Promise.resolve({ data: records, error: null });
+                    },
+                    async insert(records) {
+                        const arr = self[table] || [];
+                        records = Array.isArray(records) ? records : [records];
+                        records.forEach(record => {
+                            record.id = record.id || 'ord_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                            arr.push(record);
+                        });
+                        self[table] = arr;
+                        self['_save' + table.charAt(0).toUpperCase() + table.slice(1)]();
+                        return Promise.resolve({ data: records, error: null });
+                    },
+                    update(changes) {
+                        this._changes = changes;
+                        return {
+                            eq(column, value) {
+                                const arr = self[table] || [];
+                                arr.forEach(row => {
+                                    if (row[column] === value) Object.assign(row, changes);
+                                });
+                                self[table] = arr;
+                                self['_save' + table.charAt(0).toUpperCase() + table.slice(1)]();
+                                return Promise.resolve({ data: null, error: null });
                             }
-                        });
-                        set(DB_KEYS[table] || 'cg_mock_' + table, data);
-                        return { data: arr, error: null };
-                    },
-                    update: (updates) => {
-                        let result = data;
-                        Object.entries(eqFilters).forEach(([k,v]) => {
-                            result = result.filter(r => r[k] == v);
-                        });
-                        result.forEach(r => {
-                            const idx = data.findIndex(d => d.id === r.id);
-                            if (idx >= 0) data[idx] = { ...data[idx], ...updates };
-                        });
-                        set(DB_KEYS[table] || 'cg_mock_' + table, data);
-                        return { data, error: null };
+                        };
                     }
                 };
-                
-                // Execute query when .then() or awaited
-                chain.then = (cb) => {
-                    let result = [...data];
-                    Object.entries(eqFilters).forEach(([k,v]) => {
-                        result = result.filter(r => r[k] == v);
-                    });
-                    if (orderCol) {
-                        result.sort((a,b) => {
-                            const av = a[orderCol] || '';
-                            const bv = b[orderCol] || '';
-                            return orderAsc ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1);
-                        });
-                    }
-                    if (single) result = result[0] || null;
-                    return Promise.resolve(cb ? cb({ data: result, error: null }) : { data: result, error: null });
-                };
-                
-                return chain;
-            };
-            
-            return {
-                auth: mockAuth,
-                from: mockFrom
-            };
-        }
-        
-        // Initialize real or mock Supabase
-        let supabaseClient;
-        try {
-            if (typeof supabase !== 'undefined' && supabase.createClient) {
-                const SUPABASE_URL = 'https://your-project.supabase.co';
-                const SUPABASE_ANON_KEY = 'your-anon-key';
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            } else {
-                throw new Error('Supabase CDN not loaded');
             }
-        } catch (e) {
-            console.log('Using localStorage mock mode (no Supabase needed)');
-            supabaseClient = createMockSupabase();
-        }
-        // ======================================================================================
+        };
+        
+        const supabaseClient = MockSupabase;
+        // ==================== END MOCK SUPABASE ====================
 
         const products = [
             { id: 1, name: "iPhone 15 Pro Max", category: "phones", basePrice: 750000, price: 750000, originalPrice: 820000, rating: 4.8, reviews: 2847, source: "usa", sourceName: "Amazon USA", image: "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=400", gallery: ["https://images.unsplash.com/photo-1696446701796-da61225697cc?w=400","https://images.unsplash.com/photo-1696446702188-97aedd45fce3?w=400","https://images.unsplash.com/photo-1696446702487-f78dc5c2c7d1?w=400"], shipping: "12-15 days", badge: "Best Seller", description: "Latest iPhone with Titanium design. A17 Pro chip. We buy from Apple Store USA and ship to Cameroon.", stock: 15, stockStatus: "in", discount: 8, brand: "apple", variants: { colors: [{ name: "Natural Titanium", hex: "#C4C4C4", image: "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=400" },{ name: "Blue Titanium", hex: "#4A5568", image: "https://images.unsplash.com/photo-1696446702188-97aedd45fce3?w=400" },{ name: "White Titanium", hex: "#F7F7F7", image: "https://images.unsplash.com/photo-1696446702487-f78dc5c2c7d1?w=400" },{ name: "Black Titanium", hex: "#1A1A1A", image: "https://images.unsplash.com/photo-1696446702852-f5da18d6b84a?w=400" }], capacities: ["256GB","512GB","1TB"], capacityPrices: { "256GB": 750000, "512GB": 920000, "1TB": 1100000 } } },
@@ -3066,8 +2851,6 @@
             selectedVariants: {},
             orders: [],
             currentOrderFilter: 'all',
-            
-            // Checkout state
             checkoutStep: 'signin',
             savedAddresses: [],
             selectedAddress: null,
@@ -3093,9 +2876,7 @@
 
             loadSavedAddresses() {
                 const saved = localStorage.getItem('camerglobal_addresses');
-                if (saved) {
-                    this.savedAddresses = JSON.parse(saved);
-                }
+                if (saved) this.savedAddresses = JSON.parse(saved);
             },
 
             saveAddresses() {
@@ -3233,21 +3014,27 @@
                 if (user) {
                     document.getElementById('sidebar-signin').classList.add('hidden');
                     document.getElementById('sidebar-signout').classList.remove('hidden');
-                    document.querySelector('#account-dropdown .text-center').innerHTML = `
-                        <div class="text-left mb-3">
-                            <div class="font-bold">${user.user_metadata?.name || user.email}</div>
-                        </div>
-                        <button onclick="app.logout()" class="amazon-btn-secondary w-full py-2 text-sm font-bold rounded-sm">Sign Out</button>
-                    `;
+                    const dropdownCenter = document.querySelector('#account-dropdown .text-center');
+                    if (dropdownCenter) {
+                        dropdownCenter.innerHTML = `
+                            <div class="text-left mb-3">
+                                <div class="font-bold">${user.user_metadata?.name || user.email}</div>
+                            </div>
+                            <button onclick="app.logout()" class="amazon-btn-secondary w-full py-2 text-sm font-bold rounded-sm">Sign Out</button>
+                        `;
+                    }
                 } else {
                     document.getElementById('sidebar-signin').classList.remove('hidden');
                     document.getElementById('sidebar-signout').classList.add('hidden');
-                    document.querySelector('#account-dropdown .text-center').innerHTML = `
-                        <button onclick="app.showLoginModal()" class="amazon-btn-primary px-12 md:px-20 py-2 md:py-1 text-sm font-bold rounded-sm w-full md:w-auto">Sign in</button>
-                        <div class="text-xs mt-2">
-                            New customer? <a onclick="app.showRegisterModal()" class="a-link">Start here.</a>
-                        </div>
-                    `;
+                    const dropdownCenter = document.querySelector('#account-dropdown .text-center');
+                    if (dropdownCenter) {
+                        dropdownCenter.innerHTML = `
+                            <button onclick="app.showLoginModal()" class="amazon-btn-primary px-12 md:px-20 py-2 md:py-1 text-sm font-bold rounded-sm w-full md:w-auto">Sign in</button>
+                            <div class="text-xs mt-2">
+                                New customer? <a onclick="app.showRegisterModal()" class="a-link">Start here.</a>
+                            </div>
+                        `;
+                    }
                 }
             },
 
@@ -3263,9 +3050,7 @@
                         this.updateCartCount();
                         this.updateMobileNav();
                     }
-                } catch (e) {
-                    console.log('Cart load error', e);
-                }
+                } catch (e) { console.error('load cart error', e); }
             },
 
             async loadUserOrders(userId) {
@@ -3275,10 +3060,7 @@
                         .select('*')
                         .eq('user_id', userId)
                         .order('created_at', { ascending: false });
-                    if (error) {
-                        console.error('Error loading orders:', error);
-                        return;
-                    }
+                    if (error) { console.error('Error loading orders:', error); return; }
                     this.orders = (data || []).map(row => ({
                         id: row.id,
                         ...row,
@@ -3291,21 +3073,19 @@
                         estimatedDelivery: row.estimated_delivery ? new Date(row.estimated_delivery) : null
                     }));
                     this.renderOrders();
-                } catch (e) {
-                    console.log('Orders load error', e);
-                }
+                } catch (e) { console.error('load orders error', e); }
             },
 
             async saveCart() {
-                try {
-                    if (this.currentUser) {
+                if (this.currentUser) {
+                    try {
                         await supabaseClient.from('carts').upsert({
                             user_id: this.currentUser.id,
                             items: this.cart,
                             updated_at: new Date().toISOString()
                         });
-                    }
-                } catch (e) {}
+                    } catch (e) { console.error('save cart error', e); }
+                }
                 localStorage.setItem('camerglobal_cart', JSON.stringify(this.cart));
             },
 
@@ -3487,9 +3267,7 @@
                     'Pay via Orange Money or MTN Mobile Money',
                     product.stockStatus === 'low' ? `Only ${product.stock} items left in stock - order soon` : 'In Stock'
                 ];
-                if (product.variants) {
-                    features.push('Multiple variants available - select your preferred option');
-                }
+                if (product.variants) features.push('Multiple variants available - select your preferred option');
                 document.getElementById('detail-features').innerHTML = features.map(f => `<li>${f}</li>`).join('');
                 this.renderVariantSelectors(product);
                 const stockEl = document.getElementById('stock-status');
@@ -3647,14 +3425,6 @@
                     measurementSelect.innerHTML = v.switchTypes.map(s => `<option value="${s}">${s}</option>`).join('');
                 } else {
                     measurementContainer.classList.add('hidden');
-                }
-                
-                if (v.bundlePrices) {
-                    const basePrice = v.bundlePrices[v.bundles[0]];
-                    const extra = basePrice - product.basePrice;
-                    if (extra > 0) {
-                        product.basePrice = basePrice;
-                    }
                 }
             },
 
@@ -3967,10 +3737,6 @@
 
             filterBySource(source) {
                 this.showReturnPage('source', source, `Products from ${source === 'usa' ? 'USA' : 'China'}`);
-            },
-
-            filterCategory(cat) {
-                this.showCategoryPage(cat);
             },
 
             search() {
@@ -4515,14 +4281,12 @@
             },
 
             startCheckout(step) {
-                // Hide main content, show checkout
                 document.getElementById('home-view').style.display = 'none';
                 document.querySelectorAll('.category-view').forEach(el => el.classList.remove('active'));
                 document.getElementById('category-return-page').classList.remove('active');
                 document.getElementById('order-management-view').classList.remove('active');
                 document.getElementById('checkout-view').classList.remove('hidden');
                 
-                // Switch to checkout header
                 document.getElementById('main-header').classList.add('hidden');
                 document.getElementById('checkout-header').classList.remove('hidden');
                 document.getElementById('checkout-progress').classList.remove('hidden');
@@ -4563,7 +4327,6 @@
                 document.querySelectorAll('.checkout-step').forEach(el => el.classList.remove('active'));
                 document.getElementById(`checkout-step-${step}`).classList.add('active');
                 
-                // Update section numbers
                 const steps = ['signin', 'shipping', 'payment', 'review'];
                 const currentIdx = steps.indexOf(step);
                 
@@ -4578,7 +4341,6 @@
                             numEl.textContent = idx + 1;
                         }
                     }
-                    // Show/hide edit links
                     const titleEl = document.querySelector(`#checkout-step-${s} .checkout-section-title`);
                     if (titleEl) {
                         const editLink = titleEl.querySelector('.edit-link');
@@ -4692,7 +4454,7 @@
             updateOrderSummary() {
                 const itemsTotal = this.checkoutCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 const itemCount = this.checkoutCart.reduce((sum, item) => sum + item.quantity, 0);
-                const importFees = Math.floor(itemsTotal * 0.15); // 15% import fees
+                const importFees = Math.floor(itemsTotal * 0.15);
                 const discount = this.checkoutCart.reduce((sum, item) => {
                     const origPrice = item.originalPrice || item.price;
                     return sum + ((origPrice - item.price) * item.quantity);
@@ -4735,7 +4497,6 @@
                     const importFees = Math.floor(itemsTotal * 0.15);
                     const total = itemsTotal + this.shippingCost + importFees;
                     
-                    // Calculate estimated delivery
                     const deliveryDays = this.shippingCost === 0 ? 25 : 14;
                     const estimatedDelivery = new Date();
                     estimatedDelivery.setDate(estimatedDelivery.getDate() + deliveryDays);
@@ -4761,7 +4522,6 @@
                     
                     const orderId = data[0].id;
                     
-                    // Update stock
                     this.checkoutCart.forEach(item => {
                         const product = products.find(p => p.id === item.id);
                         if (product) {
@@ -4774,17 +4534,14 @@
                         }
                     });
                     
-                    // Clear cart
                     this.cart = [];
                     this.checkoutCart = [];
                     await this.saveCart();
                     this.updateCartCount();
                     this.updateMobileNav();
                     
-                    // Show confirmation
                     this.showOrderConfirmation(orderId, estimatedDelivery);
                     
-                    // Reload orders
                     if (this.currentUser) {
                         this.loadUserOrders(this.currentUser.id);
                     }
@@ -4811,7 +4568,6 @@
                     day: 'numeric' 
                 });
                 
-                // Hide sidebar on confirmation
                 document.getElementById('checkout-sidebar').style.display = 'none';
             },
 
@@ -4895,7 +4651,6 @@
                         password: document.getElementById('login-password').value
                     });
                     this.closeLoginModal();
-                    // If in checkout signin step, proceed to shipping
                     if (this.checkoutStep === 'signin') {
                         this.startCheckout('shipping');
                     }
@@ -4916,13 +4671,11 @@
                         options: { data: { name } }
                     });
                     if (error) throw error;
-                    await supabaseClient.from('profiles').upsert({
-                        id: data.user.id,
-                        name: name,
-                        email: email,
-                        created_at: new Date().toISOString()
-                    });
                     this.closeRegisterModal();
+                    this.showToast('Account created! You are now signed in.');
+                    if (this.checkoutStep === 'signin') {
+                        setTimeout(() => this.startCheckout('shipping'), 500);
+                    }
                 } catch (error) {
                     this.showToast('Registration failed: ' + error.message);
                 }
